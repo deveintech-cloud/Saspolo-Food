@@ -9,10 +9,26 @@ import Footer from './components/Footer';
 import GeminiChef from './components/GeminiChef';
 import AdminDashboard from './components/AdminDashboard';
 import { SiteProvider, useSite } from './SiteContext';
-import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn } from 'lucide-react';
+import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn, ChevronLeft } from 'lucide-react';
 
 // Securely obfuscated key check (Base64 of "Daniel1$")
 const _AUTH_SECRET = "RGFuaWVsMSQ=";
+
+const Modal: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
+  <div className="fixed inset-0 z-[110] flex items-center justify-center bg-zinc-950/95 backdrop-blur-2xl animate-in fade-in duration-300 p-4">
+    <div className="relative w-full max-w-5xl h-[90vh] bg-zinc-900 border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden">
+      <div className="p-8 border-b border-white/5 flex justify-between items-center">
+        <h2 className="text-2xl font-bold font-jakarta">{title}</h2>
+        <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-all">
+          <X size={24} />
+        </button>
+      </div>
+      <div className="flex-grow overflow-y-auto p-8 md:p-12">
+        {children}
+      </div>
+    </div>
+  </div>
+);
 
 const AdminLogin: React.FC<{ onAuthenticated: () => void; onClose: () => void }> = ({ onAuthenticated, onClose }) => {
   const [password, setPassword] = useState('');
@@ -20,7 +36,6 @@ const AdminLogin: React.FC<{ onAuthenticated: () => void; onClose: () => void }>
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Decode secret at runtime to verify without plain-text in code
     if (password === atob(_AUTH_SECRET)) {
       onAuthenticated();
       setError(false);
@@ -79,8 +94,8 @@ const MainContent: React.FC = () => {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [activeOverlay, setActiveOverlay] = useState<'stories' | 'privacy' | 'terms' | null>(null);
 
-  // Map section IDs to components
   const sectionMap: Record<string, React.ReactNode> = {
     hero: <Hero />,
     experience: (
@@ -121,7 +136,10 @@ const MainContent: React.FC = () => {
               <h2 className="text-3xl md:text-5xl font-bold font-jakarta tracking-tight">Latest from the Kitchen</h2>
               <p className="text-zinc-500 text-lg">Stories, news, and culinary secrets from our experts.</p>
             </div>
-            <button className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors group">
+            <button 
+              onClick={() => setActiveOverlay('stories')}
+              className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors group"
+            >
               View All Stories
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
@@ -185,7 +203,7 @@ const MainContent: React.FC = () => {
         ))}
       </main>
 
-      <Footer />
+      <Footer onOpenPrivacy={() => setActiveOverlay('privacy')} onOpenTerms={() => setActiveOverlay('terms')} />
       
       <GeminiChef />
 
@@ -197,6 +215,80 @@ const MainContent: React.FC = () => {
       >
         <Settings size={20} />
       </button>
+
+      {/* Overlays */}
+      {activeOverlay === 'stories' && (
+        <Modal title="Our Stories" onClose={() => setActiveOverlay(null)}>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map(post => (
+              <div key={post.id} className="group cursor-pointer flex flex-col h-full bg-zinc-950/40 p-4 rounded-[2rem] border border-white/5 hover:border-white/10 transition-all">
+                <div className="aspect-video rounded-2xl overflow-hidden mb-6">
+                  <img src={post.image} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={post.title} />
+                </div>
+                <div className="flex-grow space-y-3">
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <span>{post.category}</span>
+                    <span>{post.date}</span>
+                  </div>
+                  <h3 className="text-xl font-bold font-jakarta group-hover:text-orange-500 transition-colors">{post.title}</h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-bold text-zinc-300">
+                  Read Full Story <ArrowRight size={14} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
+
+      {activeOverlay === 'privacy' && (
+        <Modal title="Privacy Policy" onClose={() => setActiveOverlay(null)}>
+          <div className="prose prose-invert max-w-none space-y-6 text-zinc-400">
+            <p className="text-lg font-medium text-white">Last Updated: May 20, 2024</p>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">1. Data Collection</h3>
+              <p>We collect information you provide directly to us, such as when you create a reservation, sign up for our newsletter, or communicate with our AI Sommelier. This includes your name, email address, phone number, and dining preferences.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">2. Use of Information</h3>
+              <p>We use the information we collect to facilitate reservations, provide customer support, and send you marketing communications. Your data helps us personalize your Saspolo experience.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">3. AI Interactions</h3>
+              <p>Our AI Sommelier processes your messages to provide personalized recommendations. These interactions are stored anonymously to improve the quality of our service. No personal identifiable information is shared with third-party model providers without your consent.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">4. Security</h3>
+              <p>We implement a variety of security measures to maintain the safety of your personal information. However, no method of transmission over the Internet is 100% secure.</p>
+            </section>
+          </div>
+        </Modal>
+      )}
+
+      {activeOverlay === 'terms' && (
+        <Modal title="Terms of Service" onClose={() => setActiveOverlay(null)}>
+          <div className="prose prose-invert max-w-none space-y-6 text-zinc-400">
+            <p className="text-lg font-medium text-white">Welcome to Saspolo Food Group.</p>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">1. Reservations</h3>
+              <p>All reservations made through this website are subject to availability. We reserve the right to cancel or modify reservations in the event of unforeseen circumstances. Please arrive at least 15 minutes prior to your scheduled time.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">2. Intellectual Property</h3>
+              <p>The content, layout, design, and graphics on this website are protected by intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">3. Limitation of Liability</h3>
+              <p>Saspolo Food Group shall not be liable for any indirect, incidental, or consequential damages arising from the use of our website or services.</p>
+            </section>
+            <section className="space-y-3">
+              <h3 className="text-xl font-bold text-white">4. Governing Law</h3>
+              <p>These terms are governed by the laws of the State of New York. Any disputes shall be resolved in the courts located in New York City.</p>
+            </section>
+          </div>
+        </Modal>
+      )}
 
       {isLoginOpen && (
         <AdminLogin 

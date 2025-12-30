@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import { Instagram, Twitter, Facebook, Send } from 'lucide-react';
 import { useSite } from '../SiteContext';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenPrivacy: () => void;
+  onOpenTerms: () => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
   const { config } = useSite();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -86,22 +91,22 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="flex gap-10">
-            <a href="#" className="text-zinc-500 hover:text-orange-500 transition-colors">
+            <button className="text-zinc-500 hover:text-orange-500 transition-colors">
               <Instagram size={20} strokeWidth={1.5} />
-            </a>
-            <a href="#" className="text-zinc-500 hover:text-orange-500 transition-colors">
+            </button>
+            <button className="text-zinc-500 hover:text-orange-500 transition-colors">
               <Twitter size={20} strokeWidth={1.5} />
-            </a>
-            <a href="#" className="text-zinc-500 hover:text-orange-500 transition-colors">
+            </button>
+            <button className="text-zinc-500 hover:text-orange-500 transition-colors">
               <Facebook size={20} strokeWidth={1.5} />
-            </a>
+            </button>
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-2">
-            <p className="text-xs text-zinc-600 font-medium">© 2024 Saspolo Food Group. All rights reserved.</p>
+            <p className="text-xs text-zinc-600 font-medium">© 2024 {config.siteName} Food Group. All rights reserved.</p>
             <div className="flex gap-4 text-[10px] text-zinc-700 font-bold uppercase tracking-widest">
-              <a href="#" className="hover:text-zinc-400">Privacy</a>
-              <a href="#" className="hover:text-zinc-400">Terms</a>
+              <button onClick={onOpenPrivacy} className="hover:text-zinc-400">Privacy</button>
+              <button onClick={onOpenTerms} className="hover:text-zinc-400">Terms</button>
             </div>
           </div>
         </div>
