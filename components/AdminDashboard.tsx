@@ -18,14 +18,135 @@ import {
   Menu as MenuIcon,
   Palette,
   Newspaper,
-  Link as LinkIcon
+  Link as LinkIcon,
+  X,
+  PlusCircle
 } from 'lucide-react';
 import { useSite } from '../SiteContext';
 import { MenuCategory, MenuItem, Post, NavItem } from '../types';
 
+const AddDishModal: React.FC<{ onSave: (dish: MenuItem) => void, onClose: () => void }> = ({ onSave, onClose }) => {
+  const [formData, setFormData] = useState<MenuItem>({
+    id: Math.random().toString(36).substr(2, 9),
+    name: '',
+    price: 0,
+    description: '',
+    category: MenuCategory.MAIN,
+    image: '',
+    tags: [],
+    spicy: false,
+    healthy: false,
+    glutenFree: false
+  });
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-zinc-950/90 p-4">
+      <div className="w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+        <div className="p-8 border-b border-white/5 flex justify-between items-center">
+          <h3 className="text-2xl font-bold font-jakarta">Add New Dish</h3>
+          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full"><X size={20} /></button>
+        </div>
+        
+        <div className="p-8 overflow-y-auto space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-zinc-500">Dish Name</label>
+              <input 
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-zinc-500">Price ($)</label>
+              <input 
+                type="number"
+                value={formData.price}
+                onChange={e => setFormData({...formData, price: Number(e.target.value)})}
+                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase text-zinc-500">Description</label>
+            <textarea 
+              value={formData.description}
+              onChange={e => setFormData({...formData, description: e.target.value})}
+              rows={3}
+              className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm resize-none"
+            />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-zinc-500">Category</label>
+              <select 
+                value={formData.category}
+                onChange={e => setFormData({...formData, category: e.target.value as MenuCategory})}
+                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
+              >
+                {Object.values(MenuCategory).filter(c => c !== MenuCategory.ALL).map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-zinc-500">Image URL</label>
+              <input 
+                value={formData.image}
+                onChange={e => setFormData({...formData, image: e.target.value})}
+                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
+                placeholder="https://..."
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 p-4 rounded-2xl bg-zinc-950">
+            {[
+              { label: 'Spicy', key: 'spicy' },
+              { label: 'Healthy', key: 'healthy' },
+              { label: 'Gluten Free', key: 'glutenFree' }
+            ].map(attr => (
+              <label key={attr.key} className="flex items-center gap-3 cursor-pointer">
+                <input 
+                  type="checkbox"
+                  checked={(formData as any)[attr.key]}
+                  onChange={e => setFormData({...formData, [attr.key]: e.target.checked})}
+                  className="w-4 h-4 rounded border-zinc-800 text-orange-600 focus:ring-orange-500 bg-zinc-900"
+                />
+                <span className="text-xs font-bold text-zinc-400">{attr.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="p-8 border-t border-white/5 bg-zinc-900/50 flex gap-4">
+          <button 
+            onClick={onClose}
+            className="flex-grow py-4 rounded-2xl border border-white/5 text-sm font-bold hover:bg-white/5 transition-all"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={() => {
+              if (formData.name && formData.price > 0) onSave(formData);
+              else alert("Please fill in the name and price.");
+            }}
+            className="flex-grow py-4 rounded-2xl bg-orange-600 text-white text-sm font-bold hover:bg-orange-500 transition-all shadow-xl shadow-orange-600/20"
+          >
+            Create Dish
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { config, menuItems, posts, updateConfig, updateMenuItems, updatePosts, resetToDefaults } = useSite();
   const [activeTab, setActiveTab] = useState<'content' | 'design' | 'menu' | 'posts' | 'navigation' | 'seo'>('content');
+  const [showAddDishModal, setShowAddDishModal] = useState(false);
 
   const handleSectionToggle = (id: string) => {
     const newSections = config.sections.map(s => 
@@ -46,19 +167,6 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const updateMenuItem = (id: string, updates: Partial<MenuItem>) => {
     const newItems = menuItems.map(item => item.id === id ? { ...item, ...updates } : item);
     updateMenuItems(newItems);
-  };
-
-  const addMenuItem = () => {
-    const newItem: MenuItem = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: 'New Item',
-      price: 0,
-      description: 'New dish description...',
-      category: MenuCategory.MAIN,
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop',
-      tags: []
-    };
-    updateMenuItems([...menuItems, newItem]);
   };
 
   const addPost = () => {
@@ -88,10 +196,20 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] bg-zinc-950 flex animate-in fade-in duration-300">
+      {showAddDishModal && (
+        <AddDishModal 
+          onSave={(dish) => {
+            updateMenuItems([...menuItems, dish]);
+            setShowAddDishModal(false);
+          }}
+          onClose={() => setShowAddDishModal(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div className="w-64 border-r border-white/10 bg-zinc-900 flex flex-col shrink-0">
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
-          <span className="text-sm font-bold tracking-tighter uppercase font-jakarta">SASPOLO CMS</span>
+          <span className="text-sm font-bold tracking-tighter uppercase font-jakarta">{config.siteName} CMS</span>
           <button onClick={onClose} className="p-1 hover:bg-white/5 rounded-md transition-colors text-zinc-500">
             <Undo2 size={16} />
           </button>
@@ -140,105 +258,22 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </header>
 
         <div className="max-w-4xl mx-auto p-12">
-          {activeTab === 'posts' && (
-            <div className="space-y-8">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold font-jakarta">Latest News & Blog Posts</h3>
-                <button onClick={addPost} className="flex items-center gap-2 px-4 py-2 bg-orange-600 rounded-full text-xs font-bold hover:bg-orange-500">
-                  <Plus size={14}/> Create New Post
-                </button>
-              </div>
-              <div className="grid gap-6">
-                {posts.map(post => (
-                  <div key={post.id} className="p-6 rounded-3xl bg-zinc-900 border border-white/5 flex flex-col gap-4">
-                    <div className="flex gap-4">
-                      <div className="flex-grow space-y-4">
-                        <input 
-                          value={post.title}
-                          onChange={(e) => updatePost(post.id, { title: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm font-bold"
-                          placeholder="Post Title"
-                        />
-                        <textarea 
-                          value={post.excerpt}
-                          onChange={(e) => updatePost(post.id, { excerpt: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs text-zinc-400 resize-none"
-                          placeholder="Excerpt..."
-                          rows={2}
-                        />
-                      </div>
-                      <img src={post.image} className="w-24 h-24 rounded-2xl object-cover shrink-0" />
-                    </div>
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                      <div className="flex gap-2">
-                        <select 
-                          value={post.status}
-                          onChange={(e) => updatePost(post.id, { status: e.target.value as any })}
-                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5"
-                        >
-                          <option value="published">Published</option>
-                          <option value="draft">Draft</option>
-                        </select>
-                        <input 
-                          value={post.category}
-                          onChange={(e) => updatePost(post.id, { category: e.target.value })}
-                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5 w-24"
-                          placeholder="Category"
-                        />
-                      </div>
-                      <button 
-                        onClick={() => updatePosts(posts.filter(p => p.id !== post.id))}
-                        className="text-rose-500 hover:text-rose-400 p-2"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'navigation' && (
-            <div className="space-y-8">
-              <h3 className="text-lg font-bold font-jakarta">Main Menu Editor</h3>
-              <div className="grid gap-4">
-                {config.navigation.map(item => (
-                  <div key={item.id} className="p-4 rounded-3xl bg-zinc-900 border border-white/5 flex items-center gap-4">
-                    <div className="flex-grow grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-zinc-500">Label</label>
-                        <input 
-                          value={item.label}
-                          onChange={(e) => updateNavItem(item.id, { label: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-zinc-500">Target Section ID</label>
-                        <input 
-                          value={item.target}
-                          onChange={(e) => updateNavItem(item.id, { target: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <button 
-                  onClick={() => updateConfig({ 
-                    navigation: [...config.navigation, { id: Math.random().toString(), label: 'New Link', target: 'hero' }] 
-                  })}
-                  className="w-full p-4 border-2 border-dashed border-white/5 rounded-3xl text-zinc-600 hover:text-zinc-400 hover:border-white/10 transition-all text-sm font-bold flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Add Custom Link
-                </button>
-              </div>
-            </div>
-          )}
-
           {activeTab === 'content' && (
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
+              <section className="space-y-6">
+                <h3 className="text-lg font-bold font-jakarta border-l-2 border-orange-500 pl-4">General Settings</h3>
+                <div className="grid gap-6 p-6 rounded-3xl bg-zinc-900 border border-white/5">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold text-zinc-500">Website Name (Logo Text)</label>
+                    <input 
+                      value={config.siteName}
+                      onChange={(e) => updateConfig({ siteName: e.target.value })}
+                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500"
+                    />
+                  </div>
+                </div>
+              </section>
+
               <section className="space-y-6">
                 <h3 className="text-lg font-bold font-jakarta border-l-2 border-orange-500 pl-4">Hero Content</h3>
                 <div className="grid gap-6 p-6 rounded-3xl bg-zinc-900 border border-white/5">
@@ -311,6 +346,188 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </div>
           )}
 
+          {activeTab === 'posts' && (
+            <div className="space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-bold font-jakarta">Latest News & Blog Posts</h3>
+                <button onClick={addPost} className="flex items-center gap-2 px-4 py-2 bg-orange-600 rounded-full text-xs font-bold hover:bg-orange-500">
+                  <Plus size={14}/> Create New Post
+                </button>
+              </div>
+              <div className="grid gap-6">
+                {posts.map(post => (
+                  <div key={post.id} className="p-6 rounded-3xl bg-zinc-900 border border-white/5 flex flex-col gap-4">
+                    <div className="flex gap-4">
+                      <div className="flex-grow space-y-4">
+                        <input 
+                          value={post.title}
+                          onChange={(e) => updatePost(post.id, { title: e.target.value })}
+                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm font-bold"
+                          placeholder="Post Title"
+                        />
+                        <textarea 
+                          value={post.excerpt}
+                          onChange={(e) => updatePost(post.id, { excerpt: e.target.value })}
+                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs text-zinc-400 resize-none"
+                          placeholder="Excerpt..."
+                          rows={2}
+                        />
+                      </div>
+                      <img src={post.image} className="w-24 h-24 rounded-2xl object-cover shrink-0" />
+                    </div>
+                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                      <div className="flex gap-2">
+                        <select 
+                          value={post.status}
+                          onChange={(e) => updatePost(post.id, { status: e.target.value as any })}
+                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5"
+                        >
+                          <option value="published">Published</option>
+                          <option value="draft">Draft</option>
+                        </select>
+                        <input 
+                          value={post.category}
+                          onChange={(e) => updatePost(post.id, { category: e.target.value })}
+                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5 w-24"
+                          placeholder="Category"
+                        />
+                      </div>
+                      <button 
+                        onClick={() => updatePosts(posts.filter(p => p.id !== post.id))}
+                        className="text-rose-500 hover:text-rose-400 p-2"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'menu' && (
+            <div className="space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-bold font-jakarta">Dishes & Pricing</h3>
+                <button 
+                  onClick={() => setShowAddDishModal(true)} 
+                  className="flex items-center gap-2 px-6 py-3 bg-orange-600 rounded-2xl text-xs font-bold hover:bg-orange-500 transition-all shadow-xl shadow-orange-600/20"
+                >
+                  <PlusCircle size={16}/> Add New Dish
+                </button>
+              </div>
+              <div className="grid gap-6">
+                {menuItems.map(item => (
+                  <div key={item.id} className="p-6 rounded-[2.5rem] bg-zinc-900 border border-white/5 flex flex-col gap-6 group hover:border-white/10 transition-all">
+                    <div className="flex items-start gap-6">
+                      <div className="w-24 h-24 rounded-3xl overflow-hidden shrink-0">
+                        <img src={item.image} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-grow space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <input 
+                            value={item.name} 
+                            onChange={(e) => updateMenuItem(item.id, { name: e.target.value })}
+                            className="bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm font-bold" 
+                            placeholder="Dish Name"
+                          />
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-zinc-600 font-bold">$</span>
+                            <input 
+                              type="number" 
+                              value={item.price} 
+                              onChange={(e) => updateMenuItem(item.id, { price: Number(e.target.value) })}
+                              className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm text-orange-500 font-bold" 
+                            />
+                          </div>
+                        </div>
+                        <textarea 
+                          value={item.description} 
+                          onChange={(e) => updateMenuItem(item.id, { description: e.target.value })}
+                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs text-zinc-500 resize-none" 
+                          rows={2}
+                          placeholder="Description..."
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                      <div className="flex gap-3">
+                        <select 
+                          value={item.category}
+                          onChange={(e) => updateMenuItem(item.id, { category: e.target.value as MenuCategory })}
+                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5"
+                        >
+                          {Object.values(MenuCategory).filter(c => c !== MenuCategory.ALL).map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2">
+                          {[
+                            { label: 'Spicy', key: 'spicy' },
+                            { label: 'Healthy', key: 'healthy' },
+                            { label: 'Gluten Free', key: 'glutenFree' }
+                          ].map(attr => (
+                            <button 
+                              key={attr.key}
+                              onClick={() => updateMenuItem(item.id, { [attr.key]: !(item as any)[attr.key] })}
+                              className={`text-[10px] font-bold uppercase rounded-lg px-2 py-1 border transition-all ${
+                                (item as any)[attr.key] ? 'border-orange-500 text-orange-500 bg-orange-500/10' : 'border-white/5 text-zinc-600'
+                              }`}
+                            >
+                              {attr.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <button onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} className="text-zinc-600 hover:text-rose-500 p-2">
+                        <Trash2 size={18}/>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'navigation' && (
+            <div className="space-y-8">
+              <h3 className="text-lg font-bold font-jakarta">Main Menu Editor</h3>
+              <div className="grid gap-4">
+                {config.navigation.map(item => (
+                  <div key={item.id} className="p-4 rounded-3xl bg-zinc-900 border border-white/5 flex items-center gap-4">
+                    <div className="flex-grow grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase font-bold text-zinc-500">Label</label>
+                        <input 
+                          value={item.label}
+                          onChange={(e) => updateNavItem(item.id, { label: e.target.value })}
+                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase font-bold text-zinc-500">Target Section ID</label>
+                        <input 
+                          value={item.target}
+                          onChange={(e) => updateNavItem(item.id, { target: e.target.value })}
+                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  onClick={() => updateConfig({ 
+                    navigation: [...config.navigation, { id: Math.random().toString(), label: 'New Link', target: 'hero' }] 
+                  })}
+                  className="w-full p-4 border-2 border-dashed border-white/5 rounded-3xl text-zinc-600 hover:text-zinc-400 hover:border-white/10 transition-all text-sm font-bold flex items-center justify-center gap-2"
+                >
+                  <Plus size={16} /> Add Custom Link
+                </button>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'design' && (
             <div className="space-y-12">
               <section className="space-y-6">
@@ -365,52 +582,6 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   </div>
                 </div>
               </section>
-            </div>
-          )}
-
-          {activeTab === 'menu' && (
-            <div className="space-y-8">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold font-jakarta">Dishes & Pricing</h3>
-                <button onClick={addMenuItem} className="flex items-center gap-2 px-4 py-2 bg-orange-600 rounded-full text-xs font-bold hover:bg-orange-500">
-                  <Plus size={14}/> Add New Dish
-                </button>
-              </div>
-              <div className="grid gap-4">
-                {menuItems.map(item => (
-                  <div key={item.id} className="p-4 rounded-3xl bg-zinc-900 border border-white/5 flex items-center gap-6">
-                    <img src={item.image} className="h-16 w-16 rounded-2xl object-cover" />
-                    <div className="flex-grow grid grid-cols-4 gap-4">
-                      <div className="col-span-2 space-y-1">
-                        <input 
-                          value={item.name} 
-                          onChange={(e) => updateMenuItem(item.id, { name: e.target.value })}
-                          className="w-full bg-transparent border-none text-sm font-bold focus:ring-0 p-0" 
-                        />
-                        <input 
-                          value={item.description} 
-                          onChange={(e) => updateMenuItem(item.id, { description: e.target.value })}
-                          className="w-full bg-transparent border-none text-[10px] text-zinc-500 focus:ring-0 p-0" 
-                        />
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-zinc-600 font-bold">$</span>
-                        <input 
-                          type="number" 
-                          value={item.price} 
-                          onChange={(e) => updateMenuItem(item.id, { price: Number(e.target.value) })}
-                          className="w-16 bg-zinc-950 border-white/5 rounded-lg text-sm text-orange-500 py-1 font-bold" 
-                        />
-                      </div>
-                      <div className="flex items-center justify-end">
-                        <button onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} className="text-zinc-600 hover:text-rose-500">
-                          <Trash2 size={18}/>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
 

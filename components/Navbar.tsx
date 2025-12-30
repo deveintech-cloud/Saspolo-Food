@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
     }`}>
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-xl font-bold tracking-tighter text-white hover:opacity-80 transition-opacity uppercase font-jakarta">
-          SASPOLO
+          {config.siteName}
         </button>
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">

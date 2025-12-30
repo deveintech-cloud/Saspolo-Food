@@ -50,6 +50,8 @@ export interface NavItem {
 }
 
 export interface SiteConfig {
+  siteName: string;
+  siteLogo?: string;
   hero: {
     title: string;
     accentWord: string;

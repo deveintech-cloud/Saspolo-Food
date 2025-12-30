@@ -29,6 +29,7 @@ const DEFAULT_POSTS: Post[] = [
 ];
 
 const DEFAULT_CONFIG: SiteConfig = {
+  siteName: "SASPOLO",
   hero: {
     title: "Flavor that",
     accentWord: "ignites",
@@ -85,31 +86,31 @@ const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [config, setConfig] = useState<SiteConfig>(() => {
-    const saved = localStorage.getItem('saspolo_config_v2');
+    const saved = localStorage.getItem('saspolo_config_v3');
     return saved ? JSON.parse(saved) : DEFAULT_CONFIG;
   });
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
-    const saved = localStorage.getItem('saspolo_menu_v2');
+    const saved = localStorage.getItem('saspolo_menu_v3');
     return saved ? JSON.parse(saved) : INITIAL_MENU;
   });
 
   const [posts, setPosts] = useState<Post[]>(() => {
-    const saved = localStorage.getItem('saspolo_posts_v2');
+    const saved = localStorage.getItem('saspolo_posts_v3');
     return saved ? JSON.parse(saved) : DEFAULT_POSTS;
   });
 
   useEffect(() => {
-    localStorage.setItem('saspolo_config_v2', JSON.stringify(config));
+    localStorage.setItem('saspolo_config_v3', JSON.stringify(config));
     document.title = config.seo.title;
   }, [config]);
 
   useEffect(() => {
-    localStorage.setItem('saspolo_menu_v2', JSON.stringify(menuItems));
+    localStorage.setItem('saspolo_menu_v3', JSON.stringify(menuItems));
   }, [menuItems]);
 
   useEffect(() => {
-    localStorage.setItem('saspolo_posts_v2', JSON.stringify(posts));
+    localStorage.setItem('saspolo_posts_v3', JSON.stringify(posts));
   }, [posts]);
 
   const updateConfig = (newConfig: Partial<SiteConfig>) => {
