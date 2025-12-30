@@ -1,11 +1,22 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Standard way to access process.env in this environment, with a fallback to window.process
-const API_KEY = (typeof process !== 'undefined' ? process.env.API_KEY : (window as any).process?.env?.API_KEY) || "";
+// Ensure process.env access doesn't throw even if shim fails
+const getApiKey = () => {
+  try {
+    return (typeof process !== 'undefined' ? process.env.API_KEY : (window as any).process?.env?.API_KEY) || "";
+  } catch (e) {
+    return "";
+  }
+};
+
+const API_KEY = getApiKey();
 
 export const getGeminiResponse = async (prompt: string, menuContext: string) => {
-  if (!API_KEY) return "I'm sorry, I'm currently resting. Please check back later!";
+  if (!API_KEY) {
+    console.warn("Gemini API Key missing. Sommelier is disabled.");
+    return "I'm sorry, I'm currently resting. Please check back later!";
+  }
 
   const ai = new GoogleGenAI({ apiKey: API_KEY });
   
