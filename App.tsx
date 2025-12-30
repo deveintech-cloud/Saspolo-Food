@@ -8,89 +8,63 @@ import Reservation from './components/Reservation.tsx';
 import Footer from './components/Footer.tsx';
 import GeminiChef from './components/GeminiChef.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
+import AboutUs from './components/AboutUs.tsx';
 import { SiteProvider, useSite } from './SiteContext.tsx';
 import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn, ChevronLeft, Calendar, Tag } from 'lucide-react';
 import { Post } from './types.ts';
 
-// Securely obfuscated key check (Base64 of "Daniel1$")
 const _AUTH_SECRET = "RGFuaWVsMSQ=";
 
-const Modal: React.FC<{ title: string; onClose: () => void; children: React.ReactNode; onBack?: () => void }> = ({ title, onClose, children, onBack }) => (
-  <div className="fixed inset-0 z-[110] flex items-center justify-center bg-zinc-950/95 backdrop-blur-2xl animate-in fade-in duration-300 p-4">
-    <div className="relative w-full max-w-5xl h-[90vh] bg-zinc-900 border border-white/10 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden">
-      <div className="p-8 border-b border-white/5 flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          {onBack && (
-            <button onClick={onBack} className="p-2 hover:bg-white/5 rounded-full text-zinc-400 hover:text-white transition-all">
-              <ChevronLeft size={24} />
-            </button>
-          )}
-          <h2 className="text-2xl font-bold font-jakarta">{title}</h2>
+const Modal: React.FC<{ title: string; onClose: () => void; children: React.ReactNode; onBack?: () => void }> = ({ title, onClose, children, onBack }) => {
+  const { config } = useSite();
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-zinc-950/95 backdrop-blur-2xl animate-in fade-in duration-300 p-4">
+      <div 
+        className="relative w-full max-w-5xl h-[90vh] bg-zinc-900 border border-white/10 shadow-2xl flex flex-col overflow-hidden"
+        style={{ borderRadius: config.design.borderRadius }}
+      >
+        <div className="p-8 border-b border-white/5 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            {onBack && (
+              <button onClick={onBack} className="p-2 hover:bg-white/5 rounded-full text-zinc-400 hover:text-white transition-all">
+                <ChevronLeft size={24} />
+              </button>
+            )}
+            <h2 className="text-2xl font-bold font-jakarta">{title}</h2>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-all">
+            <X size={24} />
+          </button>
         </div>
-        <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 hover:text-white transition-all">
-          <X size={24} />
-        </button>
-      </div>
-      <div className="flex-grow overflow-y-auto p-8 md:p-12 scroll-smooth">
-        {children}
+        <div className="flex-grow overflow-y-auto p-8 md:p-12">
+          {children}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const AdminLogin: React.FC<{ onAuthenticated: () => void; onClose: () => void }> = ({ onAuthenticated, onClose }) => {
+  const { config } = useSite();
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === atob(_AUTH_SECRET)) {
-      onAuthenticated();
-      setError(false);
-    } else {
-      setError(true);
-      setTimeout(() => setError(false), 2000);
-    }
+    if (password === atob(_AUTH_SECRET)) { onAuthenticated(); setError(false); }
+    else { setError(true); setTimeout(() => setError(false), 2000); }
   };
-
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="relative w-full max-w-md p-8 bg-zinc-900 border border-white/10 rounded-[2.5rem] shadow-2xl">
-        <button onClick={onClose} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors">
-          <X size={20} />
-        </button>
-        
-        <div className="text-center mb-10">
-          <div className="mx-auto w-16 h-16 bg-orange-600/10 rounded-2xl flex items-center justify-center text-orange-500 mb-6">
-            <Lock size={32} />
-          </div>
-          <h2 className="text-2xl font-bold font-jakarta mb-2">Admin Access</h2>
-          <p className="text-zinc-500 text-sm">Please enter your credentials to manage Elengi Ya Malewa CMS.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Master Password</label>
-            <div className="relative">
-              <input 
-                type="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoFocus
-                className={`w-full bg-zinc-950 border ${error ? 'border-rose-500' : 'border-white/5'} rounded-2xl px-5 py-4 text-sm focus:outline-none focus:border-orange-500 transition-all placeholder:text-zinc-800`}
-                placeholder="••••••••"
-              />
-              {error && <p className="absolute -bottom-6 left-1 text-[10px] text-rose-500 font-bold uppercase animate-bounce">Access Denied</p>}
-            </div>
-          </div>
-          
-          <button 
-            type="submit"
-            className="w-full h-14 bg-white text-zinc-950 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-orange-500 hover:text-white transition-all shadow-xl shadow-white/5"
-          >
-            <LogIn size={18} />
-            Authenticate
-          </button>
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl p-4">
+      <div 
+        className="relative w-full max-w-md p-8 bg-zinc-900 border border-white/10 shadow-2xl text-center"
+        style={{ borderRadius: config.design.borderRadius }}
+      >
+        <button onClick={onClose} className="absolute top-6 right-6 text-zinc-500"><X size={20} /></button>
+        <Lock size={40} className="mx-auto text-orange-500 mb-6" />
+        <h2 className="text-xl font-bold mb-6">Restricted Access</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-zinc-950 border border-white/10 rounded-xl px-5 py-3 text-center" placeholder="Password" autoFocus style={{ borderRadius: `calc(${config.design.borderRadius} / 2)` }} />
+          <button type="submit" className="w-full py-3 bg-white text-black font-bold rounded-xl" style={{ borderRadius: `calc(${config.design.borderRadius} / 2)` }}>Unlock System</button>
         </form>
       </div>
     </div>
@@ -105,29 +79,31 @@ const MainContent: React.FC = () => {
   const [activeOverlay, setActiveOverlay] = useState<'stories' | 'privacy' | 'terms' | null>(null);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
+  // Global style updates based on admin config
+  useEffect(() => {
+    document.documentElement.style.setProperty('--primary-color', config.design.primaryColor);
+    document.documentElement.style.setProperty('--accent-color', config.design.accentColor);
+    document.documentElement.style.setProperty('--border-radius', config.design.borderRadius);
+    document.body.style.fontFamily = `'${config.design.fontFamily}', sans-serif`;
+  }, [config.design]);
+
   const sectionMap: Record<string, React.ReactNode> = {
     hero: <Hero />,
+    about: <AboutUs />,
     experience: (
       <section id="experience" className="py-24 px-6 bg-zinc-950 border-t border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold font-jakarta mb-20 text-center tracking-tight">{t(config.experience.title)}</h2>
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-3xl md:text-5xl font-bold font-jakarta mb-20">{config.experience.title}</h2>
           <div className="grid md:grid-cols-3 gap-16">
             {config.experience.items.map(item => {
-              const Icon = item.icon === 'Sparkles' ? Sparkles : item.icon === 'Utensils' ? Utensils : Camera;
-              const colorClasses: Record<string, string> = {
-                orange: 'bg-orange-500/10 text-orange-500',
-                rose: 'bg-rose-500/10 text-rose-500',
-                purple: 'bg-purple-500/10 text-purple-500'
-              };
+              const Icon = item.icon === 'Sparkles' ? Sparkles : Utensils;
               return (
-                <div key={item.id} className="space-y-6 group">
-                  <div className={`h-14 w-14 rounded-2xl ${colorClasses[item.color]} flex items-center justify-center group-hover:scale-110 transition-transform duration-500 shadow-xl shadow-black/20`}>
+                <div key={item.id} className="space-y-6">
+                  <div className="h-14 w-14 flex items-center justify-center mx-auto shadow-xl" style={{ backgroundColor: `${config.design.primaryColor}15`, color: config.design.primaryColor, borderRadius: `calc(${config.design.borderRadius} / 2)` }}>
                     <Icon size={28} />
                   </div>
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold font-jakarta">{t(item.title)}</h3>
-                    <p className="text-zinc-500 text-sm leading-relaxed">{t(item.description)}</p>
-                  </div>
+                  <h3 className="text-2xl font-bold">{item.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{item.description}</p>
                 </div>
               );
             })}
@@ -140,43 +116,18 @@ const MainContent: React.FC = () => {
     blog: (
       <section id="blog" className="py-24 px-6 bg-zinc-950 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
-            <div className="space-y-4">
-              <h2 className="text-3xl md:text-5xl font-bold font-jakarta tracking-tight">{t('stories')}</h2>
-              <p className="text-zinc-500 text-lg">Stories, news, and culinary secrets from our experts.</p>
-            </div>
-            <button 
-              onClick={() => setActiveOverlay('stories')}
-              className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors group"
-            >
-              {t('viewAll')}
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+          <div className="flex justify-between items-end mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold font-jakarta">{t('stories')}</h2>
+            <button onClick={() => setActiveOverlay('stories')} className="text-sm font-bold text-zinc-500 hover:text-white uppercase flex items-center gap-2">{t('viewAll')} <ArrowRight size={16}/></button>
           </div>
           <div className="grid md:grid-cols-2 gap-12">
             {posts.filter(p => p.status === 'published').slice(0, 2).map(post => (
               <div key={post.id} onClick={() => { setSelectedPost(post); setActiveOverlay('stories'); }} className="group cursor-pointer">
-                <div className="relative aspect-[16/9] rounded-[2rem] overflow-hidden mb-8 shadow-2xl">
-                  <img 
-                    src={post.image} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale-[40%] group-hover:grayscale-0" 
-                    alt={t(post.title)} 
-                  />
-                  <div className="absolute top-6 left-6">
-                    <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-white/20">
-                      {post.category}
-                    </span>
-                  </div>
+                <div className="aspect-video overflow-hidden mb-8 shadow-2xl" style={{ borderRadius: config.design.borderRadius }}>
+                  <img src={post.image} className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-700" alt={post.title} />
                 </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-xs text-zinc-500 font-bold uppercase tracking-widest">
-                    <span>{post.date}</span>
-                    <span className="h-1 w-1 rounded-full bg-zinc-800"></span>
-                    <span>5 min read</span>
-                  </div>
-                  <h3 className="text-3xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{t(post.title)}</h3>
-                  <p className="text-zinc-400 leading-relaxed line-clamp-2">{t(post.excerpt)}</p>
-                </div>
+                <h3 className="text-2xl font-bold group-hover:text-orange-500 transition-colors mb-4">{post.title}</h3>
+                <p className="text-zinc-400 line-clamp-2">{post.excerpt}</p>
               </div>
             ))}
           </div>
@@ -186,126 +137,45 @@ const MainContent: React.FC = () => {
     reserve: <Reservation />
   };
 
-  const sortedVisibleSections = [...config.sections]
-    .sort((a, b) => a.order - b.order)
-    .filter(s => s.visible);
-
-  const handleAdminToggle = () => {
-    if (isAuthenticated) {
-      setIsAdminOpen(true);
-    } else {
-      setIsLoginOpen(true);
-    }
-  };
-
-  const closeOverlay = () => {
-    setActiveOverlay(null);
-    setSelectedPost(null);
-  };
+  const sortedVisibleSections = [...config.sections].sort((a, b) => a.order - b.order).filter(s => s.visible);
 
   return (
-    <div className="min-h-screen selection:bg-orange-600 selection:text-white bg-zinc-950 overflow-x-hidden" 
-         style={{ fontFamily: config.design.fontFamily + ', sans-serif' }}>
-      
+    <div className="min-h-screen bg-zinc-950" style={{ fontFamily: `'${config.design.fontFamily}', sans-serif` }}>
       <Navbar />
-      
       <main>
-        {sortedVisibleSections.map(s => (
-          <React.Fragment key={s.id}>
-            {sectionMap[s.id]}
-          </React.Fragment>
-        ))}
+        {sortedVisibleSections.map(s => <React.Fragment key={s.id}>{sectionMap[s.id]}</React.Fragment>)}
       </main>
-
       <Footer onOpenPrivacy={() => setActiveOverlay('privacy')} onOpenTerms={() => setActiveOverlay('terms')} />
-      
       <GeminiChef />
-
-      {/* Admin Toggle */}
       <button 
-        onClick={handleAdminToggle}
-        className="fixed bottom-32 right-8 h-12 w-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-800 transition-all z-50 shadow-2xl"
-        title="Admin Dashboard"
+        onClick={() => isAuthenticated ? setIsAdminOpen(true) : setIsLoginOpen(true)} 
+        className="fixed bottom-32 right-8 h-12 w-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-800 z-50 shadow-2xl transition-all"
+        style={{ backgroundColor: isAuthenticated ? `${config.design.primaryColor}20` : undefined }}
       >
         <Settings size={20} />
       </button>
-
-      {/* Overlays */}
+      
       {activeOverlay === 'stories' && (
-        <Modal 
-          title={selectedPost ? t("storyDetails") : t("ourStories")} 
-          onClose={closeOverlay}
-          onBack={selectedPost ? () => setSelectedPost(null) : undefined}
-        >
+        <Modal title={selectedPost ? t("storyDetails") : t("ourStories")} onClose={() => { setActiveOverlay(null); setSelectedPost(null); }} onBack={selectedPost ? () => setSelectedPost(null) : undefined}>
           {selectedPost ? (
-            <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="relative aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <img src={selectedPost.image} className="w-full h-full object-cover" alt={t(selectedPost.title)} />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent"></div>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="flex flex-wrap items-center gap-6">
-                  <div className="flex items-center gap-2 px-4 py-1.5 bg-orange-600/10 border border-orange-500/20 rounded-full text-[10px] font-bold text-orange-500 uppercase tracking-widest">
-                    <Tag size={12} />
-                    {selectedPost.category}
-                  </div>
-                  <div className="flex items-center gap-2 text-zinc-500 text-xs font-bold uppercase tracking-widest">
-                    <Calendar size={14} />
-                    {selectedPost.date}
-                  </div>
-                </div>
-                
-                <h1 className="text-4xl md:text-6xl font-bold font-jakarta leading-tight text-white">
-                  {t(selectedPost.title)}
-                </h1>
-                
-                <div className="w-20 h-1 bg-orange-600 rounded-full"></div>
-                
-                <div className="prose prose-invert max-w-none">
-                  <p className="text-xl text-zinc-300 leading-relaxed font-medium italic mb-8">
-                    {t(selectedPost.excerpt)}
-                  </p>
-                  <div className="text-zinc-400 leading-[1.8] space-y-6 text-lg">
-                    {selectedPost.content.split('\n').map((para, i) => (
-                      <p key={i}>{para}</p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="pt-12 border-t border-white/5 flex justify-center">
-                <button 
-                  onClick={() => setSelectedPost(null)}
-                  className="px-10 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-2xl font-bold text-sm transition-all flex items-center gap-3 group"
-                >
-                  <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                  {t('backToStories')}
-                </button>
-              </div>
+            <div className="max-w-4xl mx-auto space-y-10">
+              <div className="aspect-[21/9] overflow-hidden" style={{ borderRadius: config.design.borderRadius }}><img src={selectedPost.image} className="w-full h-full object-cover" /></div>
+              <h1 className="text-4xl md:text-6xl font-bold">{selectedPost.title}</h1>
+              <p className="text-xl text-zinc-400 italic">{selectedPost.excerpt}</p>
+              <div className="text-zinc-300 leading-relaxed text-lg whitespace-pre-line">{selectedPost.content}</div>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.filter(p => p.status === 'published').map(post => (
                 <div 
                   key={post.id} 
-                  onClick={() => setSelectedPost(post)}
-                  className="group cursor-pointer flex flex-col h-full bg-zinc-950/40 p-4 rounded-[2rem] border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300"
+                  onClick={() => setSelectedPost(post)} 
+                  className="group cursor-pointer p-4 border border-white/5 hover:bg-white/5 transition-all"
+                  style={{ borderRadius: config.design.borderRadius }}
                 >
-                  <div className="aspect-video rounded-2xl overflow-hidden mb-6">
-                    <img src={post.image} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={t(post.title)} />
-                  </div>
-                  <div className="flex-grow space-y-3">
-                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                      <span className="text-orange-500/80">{post.category}</span>
-                      <span>{post.date}</span>
-                    </div>
-                    <h3 className="text-xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{t(post.title)}</h3>
-                    <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3">{t(post.excerpt)}</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-bold text-zinc-300 group-hover:text-orange-500 transition-colors">
-                    Read Full Story <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </div>
+                  <div className="aspect-video overflow-hidden mb-6" style={{ borderRadius: `calc(${config.design.borderRadius} / 1.5)` }}><img src={post.image} className="w-full h-full object-cover" /></div>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-orange-500">{post.title}</h3>
+                  <p className="text-xs text-zinc-500 line-clamp-3">{post.excerpt}</p>
                 </div>
               ))}
             </div>
@@ -313,84 +183,11 @@ const MainContent: React.FC = () => {
         </Modal>
       )}
 
-      {activeOverlay === 'privacy' && (
-        <Modal title="Privacy Policy" onClose={closeOverlay}>
-          <div className="prose prose-invert max-w-none space-y-6 text-zinc-400">
-            <p className="text-lg font-medium text-white">Last Updated: May 20, 2024</p>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">1. Data Collection</h3>
-              <p>We collect information you provide directly to us, such as when you create a reservation, sign up for our newsletter, or communicate with our AI Sommelier. This includes your name, email address, phone number, and dining preferences.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">2. Use of Information</h3>
-              <p>We use the information we collect to facilitate reservations, provide customer support, and send you marketing communications. Your data helps us personalize your Elengi Ya Malewa experience.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">3. AI Interactions</h3>
-              <p>Our AI Sommelier processes your messages to provide personalized recommendations. These interactions are stored anonymously to improve the quality of our service. No personal identifiable information is shared with third-party model providers without your consent.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">4. Security</h3>
-              <p>We implement a variety of security measures to maintain the safety of your personal information. However, no method of transmission over the Internet is 100% secure.</p>
-            </section>
-          </div>
-        </Modal>
-      )}
-
-      {activeOverlay === 'terms' && (
-        <Modal title="Terms of Service" onClose={closeOverlay}>
-          <div className="prose prose-invert max-w-none space-y-6 text-zinc-400">
-            <p className="text-lg font-medium text-white">Welcome to Elengi Ya Malewa Food Group.</p>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">1. Reservations</h3>
-              <p>All reservations made through this website are subject to availability. We reserve the right to cancel or modify reservations in the event of unforeseen circumstances. Please arrive at least 15 minutes prior to your scheduled time.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">2. Intellectual Property</h3>
-              <p>The content, layout, design, and graphics on this website are protected by intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">3. Limitation of Liability</h3>
-              <p>Elengi Ya Malewa Food Group shall not be liable for any indirect, incidental, or consequential damages arising from the use of our website or services.</p>
-            </section>
-            <section className="space-y-3">
-              <h3 className="text-xl font-bold text-white">4. Governing Law</h3>
-              <p>These terms are governed by the laws of the State of New York. Any disputes shall be resolved in the courts located in New York City.</p>
-            </section>
-          </div>
-        </Modal>
-      )}
-
-      {isLoginOpen && (
-        <AdminLogin 
-          onAuthenticated={() => {
-            setIsLoginOpen(false);
-            setIsAuthenticated(true);
-            setIsAdminOpen(true);
-          }} 
-          onClose={() => setIsLoginOpen(false)} 
-        />
-      )}
-
-      {isAdminOpen && (
-        <AdminDashboard onClose={() => setIsAdminOpen(false)} />
-      )}
-
-      {/* Theme Decorative Accents */}
-      <div className="fixed top-0 right-0 -z-10 w-[800px] h-[800px] rounded-full blur-[150px] translate-x-1/2 -translate-y-1/2 opacity-50 pointer-events-none"
-           style={{ backgroundColor: `${config.design.primaryColor}10` }}></div>
-      <div className="fixed bottom-0 left-0 -z-10 w-[600px] h-[600px] rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 opacity-30 pointer-events-none"
-           style={{ backgroundColor: `${config.design.primaryColor}15` }}></div>
+      {isLoginOpen && <AdminLogin onAuthenticated={() => { setIsLoginOpen(false); setIsAuthenticated(true); setIsAdminOpen(true); }} onClose={() => setIsLoginOpen(false)} />}
+      {isAdminOpen && <AdminDashboard onClose={() => setIsAdminOpen(false)} />}
     </div>
   );
 };
 
-const App: React.FC = () => {
-  return (
-    <SiteProvider>
-      <MainContent />
-    </SiteProvider>
-  );
-};
-
+const App: React.FC = () => <SiteProvider><MainContent /></SiteProvider>;
 export default App;

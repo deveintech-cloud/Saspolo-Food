@@ -1,733 +1,495 @@
 
 import React, { useState, useRef } from 'react';
 import { 
-  Layout, 
-  Settings, 
-  FileText, 
-  ImageIcon, 
-  Search, 
-  ChevronRight, 
-  Save, 
-  Trash2, 
-  Plus, 
-  Eye, 
-  EyeOff, 
-  ArrowUp, 
-  ArrowDown, 
-  Undo2,
-  Menu as MenuIcon,
-  Palette,
-  Newspaper,
-  Link as LinkIcon,
-  X,
-  PlusCircle,
-  Upload,
-  Image as ImageIconAlt
+  Layout, Settings, FileText, ImageIcon, Search, ChevronRight, Save, Trash2, Plus, 
+  Eye, EyeOff, ArrowUp, ArrowDown, Undo2, Menu as MenuIcon, Palette, Newspaper, 
+  Link as LinkIcon, X, PlusCircle, Upload, Info, BarChart3, Share2, Type, Square,
+  CircleDot, Layers, Quote as QuoteIcon, Activity
 } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
-import { MenuCategory, MenuItem, Post, NavItem } from '../types.ts';
+import { MenuCategory, MenuItem, Post, NavItem, SiteConfig } from '../types.ts';
 
-const AddDishModal: React.FC<{ onSave: (dish: MenuItem) => void, onClose: () => void }> = ({ onSave, onClose }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState<MenuItem>({
-    id: Math.random().toString(36).substr(2, 9).toUpperCase(),
-    name: '',
-    price: 0,
-    description: '',
-    category: MenuCategory.MAIN,
-    image: '',
-    tags: [],
-    spicy: false,
-    healthy: false,
-    glutenFree: false
-  });
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-zinc-950/90 p-4">
-      <div className="w-full max-w-2xl bg-zinc-900 border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
-        <div className="p-8 border-b border-white/5 flex justify-between items-center bg-zinc-900/50">
-          <div>
-            <h3 className="text-2xl font-bold font-jakarta text-white">Upload New Product</h3>
-            <p className="text-xs text-zinc-500 font-medium">Add a unique dish to your Congolese menu</p>
-          </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-400 transition-colors"><X size={20} /></button>
-        </div>
-        
-        <div className="p-8 overflow-y-auto space-y-8">
-          {/* Image Preview & Upload */}
-          <div className="relative group aspect-video rounded-3xl bg-zinc-950 border-2 border-dashed border-white/5 overflow-hidden flex flex-col items-center justify-center transition-all hover:border-orange-500/50">
-            {formData.image ? (
-              <>
-                <img src={formData.image} className="w-full h-full object-cover" alt="Preview" />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                  <button onClick={() => fileInputRef.current?.click()} className="p-3 bg-white text-black rounded-full hover:scale-110 transition-transform"><Upload size={20} /></button>
-                  <button onClick={() => setFormData({...formData, image: ''})} className="p-3 bg-rose-600 text-white rounded-full hover:scale-110 transition-transform"><Trash2 size={20} /></button>
-                </div>
-              </>
-            ) : (
-              <div className="text-center p-8">
-                <div className="mx-auto w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-zinc-500 mb-4">
-                  <Upload size={24} />
-                </div>
-                <p className="text-sm font-bold text-white mb-1">Click to upload dish photo</p>
-                <p className="text-xs text-zinc-500">Supports JPG, PNG or WebP</p>
-                <button 
-                  onClick={() => fileInputRef.current?.click()}
-                  className="mt-4 px-4 py-2 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-zinc-700 transition-colors"
-                >
-                  Select File
-                </button>
-              </div>
-            )}
-            <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="image/*" />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Dish Name</label>
-              <input 
-                placeholder="e.g. Liboke ya Mpunda"
-                value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500 transition-all outline-none"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Price (ZAR)</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 font-bold">R</span>
-                <input 
-                  type="number"
-                  value={formData.price}
-                  onChange={e => setFormData({...formData, price: Number(e.target.value)})}
-                  className="w-full bg-zinc-950 border border-white/5 rounded-xl pl-8 pr-4 py-3 text-sm focus:border-orange-500 transition-all outline-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Product Description</label>
-            <textarea 
-              value={formData.description}
-              onChange={e => setFormData({...formData, description: e.target.value})}
-              rows={3}
-              placeholder="Describe the flavors and preparation..."
-              className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm resize-none focus:border-orange-500 transition-all outline-none"
-            />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Menu Category</label>
-              <select 
-                value={formData.category}
-                onChange={e => setFormData({...formData, category: e.target.value as MenuCategory})}
-                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500 outline-none"
-              >
-                {Object.values(MenuCategory).filter(c => c !== MenuCategory.ALL).map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-zinc-500 tracking-widest">Manual Image Link (Optional)</label>
-              <input 
-                value={formData.image}
-                onChange={e => setFormData({...formData, image: e.target.value})}
-                className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500 outline-none"
-                placeholder="https://images.unsplash.com/..."
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 p-5 rounded-3xl bg-zinc-950 border border-white/5">
-            {[
-              { label: 'Spicy', key: 'spicy' },
-              { label: 'Healthy', key: 'healthy' },
-              { label: 'Gluten Free', key: 'glutenFree' }
-            ].map(attr => (
-              <label key={attr.key} className="flex items-center gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox"
-                  checked={(formData as any)[attr.key]}
-                  onChange={e => setFormData({...formData, [attr.key]: e.target.checked})}
-                  className="w-5 h-5 rounded-lg border-zinc-800 text-orange-600 focus:ring-orange-500 bg-zinc-900 transition-all"
-                />
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest group-hover:text-zinc-300 transition-colors">{attr.label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="p-8 border-t border-white/5 bg-zinc-900/50 flex gap-4">
-          <button 
-            onClick={onClose}
-            className="flex-grow py-4 rounded-2xl border border-white/10 text-sm font-bold text-zinc-400 hover:bg-white/5 transition-all"
-          >
-            Discard
-          </button>
-          <button 
-            onClick={() => {
-              if (formData.name && formData.price > 0 && formData.image) onSave(formData);
-              else alert("Please fill in the name, price, and upload an image.");
-            }}
-            className="flex-grow py-4 rounded-2xl bg-orange-600 text-white text-sm font-bold hover:bg-orange-500 transition-all shadow-xl shadow-orange-600/20 flex items-center justify-center gap-2"
-          >
-            <PlusCircle size={18} />
-            Publish Product
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+const SectionHeader: React.FC<{ title: string; subtitle: string }> = ({ title, subtitle }) => (
+  <div className="mb-10">
+    <h3 className="text-2xl font-bold font-jakarta text-white">{title}</h3>
+    <p className="text-xs text-zinc-500 font-medium mt-1">{subtitle}</p>
+    <div className="h-1 w-12 bg-orange-600 mt-4 rounded-full"></div>
+  </div>
+);
 
 const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { config, menuItems, posts, updateConfig, updateMenuItems, updatePosts, resetToDefaults } = useSite();
-  const [activeTab, setActiveTab] = useState<'content' | 'design' | 'menu' | 'posts' | 'navigation' | 'seo'>('content');
-  const [showAddDishModal, setShowAddDishModal] = useState(false);
-  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
-
-  const handleDishImageUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateMenuItem(id, { image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSectionToggle = (id: string) => {
-    const newSections = config.sections.map(s => 
-      s.id === id ? { ...s, visible: !s.visible } : s
-    );
-    updateConfig({ sections: newSections });
-  };
-
-  const handleSectionMove = (index: number, direction: 'up' | 'down') => {
-    const newSections = [...config.sections];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= newSections.length) return;
-    
-    [newSections[index], newSections[targetIndex]] = [newSections[targetIndex], newSections[index]];
-    updateConfig({ sections: newSections.map((s, i) => ({ ...s, order: i })) });
-  };
-
-  const updateMenuItem = (id: string, updates: Partial<MenuItem>) => {
-    const newItems = menuItems.map(item => item.id === id ? { ...item, ...updates } : item);
-    updateMenuItems(newItems);
-  };
-
-  const addPost = () => {
-    const newPost: Post = {
-      id: Math.random().toString(36).substr(2, 9).toUpperCase(),
-      title: 'New Story',
-      slug: 'new-story-' + Date.now(),
-      excerpt: 'Brief summary of your news story...',
-      content: 'Write your story here...',
-      image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1000&auto=format&fit=crop',
-      status: 'draft',
-      category: 'General',
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    };
-    updatePosts([...posts, newPost]);
-  };
-
-  const updatePost = (id: string, updates: Partial<Post>) => {
-    updatePosts(posts.map(p => p.id === id ? { ...p, ...updates } : p));
-  };
+  const [activeTab, setActiveTab] = useState<'content' | 'about' | 'stats' | 'menu' | 'posts' | 'navigation' | 'design' | 'footer' | 'seo'>('content');
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editingMenuItemId, setEditingMenuItemId] = useState<string | null>(null);
 
   const updateNavItem = (id: string, updates: Partial<NavItem>) => {
-    updateConfig({
-      navigation: config.navigation.map(n => n.id === id ? { ...n, ...updates } : n)
-    });
+    updateConfig({ navigation: config.navigation.map(n => n.id === id ? { ...n, ...updates } : n) });
+  };
+
+  const deleteNavItem = (id: string) => {
+    updateConfig({ navigation: config.navigation.filter(n => n.id !== id) });
+  };
+
+  const moveAboutSection = (idx: number, direction: 'up' | 'down') => {
+    const newSections = [...config.about.sections];
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= newSections.length) return;
+    
+    [newSections[idx], newSections[targetIdx]] = [newSections[targetIdx], newSections[idx]];
+    updateConfig({ about: { ...config.about, sections: newSections } });
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-zinc-950 flex animate-in fade-in duration-300">
-      {showAddDishModal && (
-        <AddDishModal 
-          onSave={(dish) => {
-            updateMenuItems([...menuItems, dish]);
-            setShowAddDishModal(false);
-          }}
-          onClose={() => setShowAddDishModal(false)}
-        />
-      )}
-
+    <div className="fixed inset-0 z-[100] bg-zinc-950 flex animate-in fade-in duration-300 overflow-hidden">
       {/* Sidebar */}
-      <div className="w-72 border-r border-white/10 bg-zinc-900 flex flex-col shrink-0 shadow-2xl">
-        <div className="p-8 border-b border-white/5 flex flex-col gap-1">
+      <div className="w-72 border-r border-white/10 bg-zinc-900 flex flex-col shrink-0 shadow-2xl overflow-y-auto">
+        <div className="p-8 border-b border-white/5">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">Dashboard</span>
-            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-all text-zinc-500 hover:text-white">
-              <Undo2 size={18} />
-            </button>
+            <span className="text-[10px] font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">System Control</span>
+            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-all text-zinc-500 hover:text-white"><Undo2 size={16} /></button>
           </div>
-          <h1 className="text-xl font-bold text-white font-jakarta">{config.siteName} CMS</h1>
-          <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Version 2.4.0 High-End</p>
+          <h1 className="text-lg font-bold text-white font-jakarta">Elengi Admin</h1>
         </div>
         
-        <nav className="flex-grow p-6 space-y-3">
+        <nav className="p-4 space-y-1">
           {[
-            { id: 'content', label: 'Pages & Blocks', icon: <FileText size={18} /> },
-            { id: 'posts', label: 'News Stories', icon: <Newspaper size={18} /> },
-            { id: 'menu', label: 'Product Manager', icon: <MenuIcon size={18} /> },
-            { id: 'navigation', label: 'Navigation', icon: <LinkIcon size={18} /> },
-            { id: 'design', label: 'Brand Identity', icon: <Palette size={18} /> },
-            { id: 'seo', label: 'SEO Settings', icon: <Search size={18} /> },
+            { id: 'content', label: 'Home Page', icon: <FileText size={16} /> },
+            { id: 'about', label: 'About Story', icon: <Info size={16} /> },
+            { id: 'stats', label: 'Statistics', icon: <BarChart3 size={16} /> },
+            { id: 'posts', label: 'News Feed', icon: <Newspaper size={16} /> },
+            { id: 'menu', label: 'Products', icon: <MenuIcon size={16} /> },
+            { id: 'navigation', label: 'Navigation', icon: <LinkIcon size={16} /> },
+            { id: 'footer', label: 'Footer & Links', icon: <Share2 size={16} /> },
+            { id: 'design', label: 'Theme Design', icon: <Palette size={16} /> },
+            { id: 'seo', label: 'SEO Config', icon: <Search size={16} /> },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all ${
-                activeTab === tab.id 
-                  ? 'bg-white text-zinc-950 shadow-xl shadow-white/10' 
-                  : 'text-zinc-500 hover:text-white hover:bg-white/5'
+              className={`w-full flex items-center gap-3 px-5 py-3 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all ${
+                activeTab === tab.id ? 'bg-orange-600 text-white shadow-xl' : 'text-zinc-500 hover:text-white hover:bg-white/5'
               }`}
             >
-              <div className={activeTab === tab.id ? 'text-zinc-950' : 'text-zinc-600'}>
-                {tab.icon}
-              </div>
-              {tab.label}
+              {tab.icon} {tab.label}
             </button>
           ))}
         </nav>
 
         <div className="p-6 mt-auto border-t border-white/5">
-          <button 
-            onClick={resetToDefaults}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
-          >
-            Wipe All Data
-          </button>
+          <button onClick={resetToDefaults} className="w-full text-[9px] font-black uppercase text-rose-500 hover:bg-rose-500/10 p-3 rounded-xl">Hard Reset Application</button>
         </div>
       </div>
 
-      {/* Main Panel */}
-      <div className="flex-grow overflow-y-auto bg-zinc-950/30">
-        <header className="sticky top-0 z-10 px-12 py-8 border-b border-white/5 bg-zinc-950/80 backdrop-blur-2xl flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold font-jakarta text-white capitalize">{activeTab.replace(/([A-Z])/g, ' $1')}</h2>
-            <p className="text-xs text-zinc-500 font-medium">Manage your website's {activeTab} data</p>
-          </div>
-          <div className="flex items-center gap-4">
-             <button onClick={onClose} className="px-6 py-3 bg-white text-zinc-950 rounded-2xl text-xs font-bold hover:bg-zinc-200 transition-all flex items-center gap-2 shadow-xl shadow-white/10">
-              <Save size={16} />
-              Commit Changes
-            </button>
-          </div>
-        </header>
-
-        <div className="max-w-5xl mx-auto p-12">
-          {activeTab === 'menu' && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div>
-                  <h3 className="text-3xl font-bold font-jakarta text-white">Culinary Inventory</h3>
-                  <p className="text-sm text-zinc-500 mt-1">Change, edit and upload your high-end Congolese product catalog.</p>
+      {/* Content Area */}
+      <div className="flex-grow overflow-y-auto bg-zinc-950/40">
+        <div className="max-w-4xl mx-auto p-12 pb-32">
+          
+          {activeTab === 'about' && (
+            <div className="space-y-16">
+              <SectionHeader title="About Us Master" subtitle="Manage your heritage narrative and philosophical statements." />
+              
+              {/* Header Controls */}
+              <div className="p-8 rounded-[2.5rem] bg-zinc-900 border border-white/5 space-y-6">
+                <h4 className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-4">Header Configuration</h4>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-600 uppercase">Main Title</label>
+                    <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm font-bold" value={config.about.title} onChange={e => updateConfig({ about: { ...config.about, title: e.target.value } })} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-600 uppercase">Subtitle Description</label>
+                    <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm resize-none" rows={2} value={config.about.subtitle} onChange={e => updateConfig({ about: { ...config.about, subtitle: e.target.value } })} />
+                  </div>
                 </div>
-                <button 
-                  onClick={() => setShowAddDishModal(true)} 
-                  className="group flex items-center gap-3 px-8 py-4 bg-orange-600 rounded-[1.5rem] text-xs font-bold uppercase tracking-widest text-white hover:bg-orange-500 transition-all shadow-2xl shadow-orange-600/30 active:scale-95"
-                >
-                  <PlusCircle size={20} className="group-hover:rotate-90 transition-transform duration-500" />
-                  New Product
-                </button>
               </div>
 
-              <div className="grid gap-6">
-                {menuItems.map(item => (
-                  <div key={item.id} className="relative p-8 rounded-[2.5rem] bg-zinc-900 border border-white/5 flex flex-col gap-8 group hover:border-white/20 transition-all duration-500 shadow-xl overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 flex gap-2 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
-                       <button onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} className="h-10 w-10 bg-rose-600/10 text-rose-500 rounded-xl flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all">
-                        <Trash2 size={18}/>
-                      </button>
+              {/* Quote Section */}
+              <div className="p-8 rounded-[2.5rem] bg-zinc-900 border border-white/5 space-y-8">
+                <div className="flex items-center gap-3">
+                  <QuoteIcon className="text-orange-500" size={20} />
+                  <h4 className="font-bold text-white">Chef's Signature Quote</h4>
+                </div>
+                <div className="grid gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-600 uppercase">Quote Text</label>
+                    <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm italic" rows={3} value={config.about.quote?.text} onChange={e => updateConfig({ about: { ...config.about, quote: { ...config.about.quote!, text: e.target.value } } })} />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-zinc-600 uppercase">Author Name</label>
+                      <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm font-bold" value={config.about.quote?.author} onChange={e => updateConfig({ about: { ...config.about, quote: { ...config.about.quote!, author: e.target.value } } })} />
                     </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold text-zinc-600 uppercase">Role/Title</label>
+                      <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-xs" value={config.about.quote?.role} onChange={e => updateConfig({ about: { ...config.about, quote: { ...config.about.quote!, role: e.target.value } } })} />
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                    <div className="flex flex-col lg:flex-row items-start gap-10">
-                      {/* Product Image Section */}
-                      <div className="w-full lg:w-48 space-y-4 shrink-0">
-                        <div className="relative aspect-square rounded-[2rem] overflow-hidden group/img bg-zinc-950 border border-white/5">
-                          <img src={item.image} className="w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110" alt={item.name} />
-                          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                            <button 
-                              onClick={() => fileInputRefs.current[item.id]?.click()}
-                              className="p-3 bg-white text-black rounded-full shadow-2xl hover:scale-110 transition-transform"
-                            >
-                              <Upload size={18} />
-                            </button>
-                          </div>
+              {/* Narrative Blocks */}
+              <div className="space-y-8">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-white">Narrative Story Blocks</h4>
+                  <button onClick={() => {
+                    const newSec = { id: Date.now().toString(), title: 'New Story Chapter', text: 'Share a piece of your history...', image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd' };
+                    updateConfig({ about: { ...config.about, sections: [...config.about.sections, newSec] } });
+                  }} className="p-2 text-orange-500 hover:bg-orange-500/10 rounded-xl transition-all"><PlusCircle size={24} /></button>
+                </div>
+                
+                {config.about.sections.map((sec, idx) => (
+                  <div key={sec.id} className="p-8 rounded-[2.5rem] bg-zinc-900 border border-white/5 space-y-6 group">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <span className="text-[10px] font-bold text-zinc-700 uppercase tracking-widest">Section #{idx + 1}</span>
+                        <div className="flex gap-1">
+                          <button onClick={() => moveAboutSection(idx, 'up')} className="p-1 hover:bg-white/5 text-zinc-600 rounded"><ArrowUp size={12} /></button>
+                          <button onClick={() => moveAboutSection(idx, 'down')} className="p-1 hover:bg-white/5 text-zinc-600 rounded"><ArrowDown size={12} /></button>
                         </div>
-                        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest text-center">ID: {item.id}</p>
-                        {/* Fix: Ref callback must return void. Braces used to avoid implicit return of assignment. */}
-                        <input 
-                          type="file" 
-                          ref={el => { fileInputRefs.current[item.id] = el; }}
-                          onChange={(e) => handleDishImageUpload(item.id, e)}
-                          className="hidden" 
-                          accept="image/*" 
-                        />
                       </div>
-
-                      {/* Product Details Section */}
-                      <div className="flex-grow space-y-6">
-                        <div className="grid md:grid-cols-2 gap-6">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Product Name</label>
-                            <input 
-                              value={item.name} 
-                              onChange={(e) => updateMenuItem(item.id, { name: e.target.value })}
-                              className="w-full bg-zinc-950 border border-white/5 rounded-2xl px-5 py-3 text-sm font-bold text-white focus:border-orange-500 transition-all" 
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Price (ZAR)</label>
-                            <div className="relative">
-                              <span className="absolute left-5 top-1/2 -translate-y-1/2 text-orange-500 font-black">R</span>
-                              <input 
-                                type="number" 
-                                value={item.price} 
-                                onChange={(e) => updateMenuItem(item.id, { price: Number(e.target.value) })}
-                                className="w-full bg-zinc-950 border border-white/5 rounded-2xl pl-10 pr-5 py-3 text-sm font-black text-white focus:border-orange-500 transition-all" 
-                              />
-                            </div>
-                          </div>
+                      <button onClick={() => {
+                        const newSecs = config.about.sections.filter(s => s.id !== sec.id);
+                        updateConfig({ about: { ...config.about, sections: newSecs } });
+                      }} className="text-rose-500 hover:bg-rose-500/10 p-2 rounded-xl transition-all opacity-0 group-hover:opacity-100"><Trash2 size={16} /></button>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="md:col-span-2 space-y-4">
+                        <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm font-bold" value={sec.title} onChange={e => {
+                          const newSecs = [...config.about.sections];
+                          newSecs[idx].title = e.target.value;
+                          updateConfig({ about: { ...config.about, sections: newSecs } });
+                        }} placeholder="Block Title" />
+                        <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm resize-none" rows={4} value={sec.text} onChange={e => {
+                          const newSecs = [...config.about.sections];
+                          newSecs[idx].text = e.target.value;
+                          updateConfig({ about: { ...config.about, sections: newSecs } });
+                        }} placeholder="Block Description Text" />
+                      </div>
+                      <div className="space-y-4">
+                        <div className="aspect-[4/5] bg-zinc-950 rounded-2xl overflow-hidden border border-white/5">
+                          <img src={sec.image} className="w-full h-full object-cover" />
                         </div>
-
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Gastronomic Description</label>
-                          <textarea 
-                            value={item.description} 
-                            onChange={(e) => updateMenuItem(item.id, { description: e.target.value })}
-                            className="w-full bg-zinc-950 border border-white/5 rounded-2xl px-5 py-3 text-xs text-zinc-400 resize-none leading-relaxed focus:border-orange-500 transition-all" 
-                            rows={3}
-                          />
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-white/5">
-                           <div className="space-y-2 min-w-[150px]">
-                              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Category</label>
-                              <select 
-                                value={item.category}
-                                onChange={(e) => updateMenuItem(item.id, { category: e.target.value as MenuCategory })}
-                                className="w-full bg-zinc-950 text-xs font-bold uppercase rounded-xl px-4 py-2 border border-white/10 text-white outline-none"
-                              >
-                                {Object.values(MenuCategory).filter(c => c !== MenuCategory.ALL).map(cat => (
-                                  <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                              </select>
-                           </div>
-
-                           <div className="flex gap-3 mt-4 md:mt-0">
-                              {[
-                                { label: 'Spicy', key: 'spicy' },
-                                { label: 'Healthy', key: 'healthy' },
-                                { label: 'Gluten Free', key: 'glutenFree' }
-                              ].map(attr => (
-                                <button 
-                                  key={attr.key}
-                                  onClick={() => updateMenuItem(item.id, { [attr.key]: !(item as any)[attr.key] })}
-                                  className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                                    (item as any)[attr.key] 
-                                      ? 'bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-600/20' 
-                                      : 'bg-zinc-800 border-white/5 text-zinc-600 hover:text-zinc-400'
-                                  }`}
-                                >
-                                  {attr.label}
-                                </button>
-                              ))}
-                           </div>
-                        </div>
+                        <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-[9px] font-mono" value={sec.image} onChange={e => {
+                          const newSecs = [...config.about.sections];
+                          newSecs[idx].image = e.target.value;
+                          updateConfig({ about: { ...config.about, sections: newSecs } });
+                        }} placeholder="Image URL" />
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-
-          {activeTab === 'content' && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2">
-              <section className="space-y-6">
-                <h3 className="text-lg font-bold font-jakarta border-l-2 border-orange-500 pl-4">General Settings</h3>
-                <div className="grid gap-6 p-6 rounded-3xl bg-zinc-900 border border-white/5">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-zinc-500">Website Name (Logo Text)</label>
-                    <input 
-                      value={config.siteName}
-                      onChange={(e) => updateConfig({ siteName: e.target.value })}
-                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500"
-                    />
-                  </div>
-                </div>
-              </section>
-
-              <section className="space-y-6">
-                <h3 className="text-lg font-bold font-jakarta border-l-2 border-orange-500 pl-4">Hero Content</h3>
-                <div className="grid gap-6 p-6 rounded-3xl bg-zinc-900 border border-white/5">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase font-bold text-zinc-500">Title Prefix</label>
-                      <input 
-                        value={config.hero.title}
-                        onChange={(e) => updateConfig({ hero: { ...config.hero, title: e.target.value } })}
-                        className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] uppercase font-bold text-zinc-500">Accent Word</label>
-                      <input 
-                        value={config.hero.accentWord}
-                        onChange={(e) => updateConfig({ hero: { ...config.hero, accentWord: e.target.value } })}
-                        className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm focus:border-orange-500"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-zinc-500">Description</label>
-                    <textarea 
-                      value={config.hero.description}
-                      onChange={(e) => updateConfig({ hero: { ...config.hero, description: e.target.value } })}
-                      rows={3}
-                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm resize-none"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-zinc-500">Hero Image URL</label>
-                    <input 
-                      value={config.hero.image}
-                      onChange={(e) => updateConfig({ hero: { ...config.hero, image: e.target.value } })}
-                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
-                    />
-                  </div>
-                </div>
-              </section>
-
-              <section className="space-y-6">
-                <h3 className="text-lg font-bold font-jakarta border-l-2 border-orange-500 pl-4">Experience Blocks</h3>
-                <div className="grid gap-6">
-                  {config.experience.items.map((item, idx) => (
-                    <div key={item.id} className="p-6 rounded-3xl bg-zinc-900 border border-white/5 space-y-4">
-                      <input 
-                        value={item.title}
-                        onChange={(e) => {
-                          const newItems = [...config.experience.items];
-                          newItems[idx].title = e.target.value;
-                          updateConfig({ experience: { ...config.experience, items: newItems } });
-                        }}
-                        className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm font-bold"
-                      />
-                      <textarea 
-                        value={item.description}
-                        onChange={(e) => {
-                          const newItems = [...config.experience.items];
-                          newItems[idx].description = e.target.value;
-                          updateConfig({ experience: { ...config.experience, items: newItems } });
-                        }}
-                        className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs text-zinc-400 resize-none"
-                        rows={2}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </section>
             </div>
           )}
 
           {activeTab === 'posts' && (
-            <div className="space-y-8">
+            <div className="space-y-12">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold font-jakarta">Latest News & Blog Posts</h3>
-                <button onClick={addPost} className="flex items-center gap-2 px-4 py-2 bg-orange-600 rounded-full text-xs font-bold hover:bg-orange-500">
-                  <Plus size={14}/> Create New Post
+                <SectionHeader title="Journal Manager" subtitle="Control your stories, news and recipes." />
+                <button 
+                  onClick={() => {
+                    const newPost: Post = {
+                      id: Date.now().toString(),
+                      title: 'New Story Title',
+                      slug: 'new-story-' + Date.now(),
+                      excerpt: 'Brief summary of the story...',
+                      content: 'Write the full content here...',
+                      image: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757',
+                      status: 'draft',
+                      category: 'Heritage',
+                      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                    };
+                    updatePosts([newPost, ...posts]);
+                    setEditingPostId(newPost.id);
+                  }}
+                  className="px-6 py-3 bg-orange-600 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white hover:bg-orange-500"
+                >
+                  Create Post
                 </button>
               </div>
+
               <div className="grid gap-6">
                 {posts.map(post => (
-                  <div key={post.id} className="p-6 rounded-3xl bg-zinc-900 border border-white/5 flex flex-col gap-4">
-                    <div className="flex gap-4">
-                      <div className="flex-grow space-y-4">
-                        <input 
-                          value={post.title}
-                          onChange={(e) => updatePost(post.id, { title: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm font-bold"
-                          placeholder="Post Title"
-                        />
-                        <textarea 
-                          value={post.excerpt}
-                          onChange={(e) => updatePost(post.id, { excerpt: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs text-zinc-400 resize-none"
-                          placeholder="Excerpt..."
-                          rows={2}
-                        />
+                  <div key={post.id} className={`p-6 bg-zinc-900 border ${editingPostId === post.id ? 'border-orange-500' : 'border-white/5'} rounded-[2rem] transition-all`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <img src={post.image} className="w-12 h-12 rounded-xl object-cover" />
+                        <div>
+                          <h4 className="font-bold text-white text-sm">{post.title}</h4>
+                          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${post.status === 'published' ? 'bg-green-500/10 text-green-500' : 'bg-zinc-800 text-zinc-500'}`}>
+                            {post.status}
+                          </span>
+                        </div>
                       </div>
-                      <img src={post.image} className="w-24 h-24 rounded-2xl object-cover shrink-0" />
-                    </div>
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                      <div className="flex gap-2">
-                        <select 
-                          value={post.status}
-                          onChange={(e) => updatePost(post.id, { status: e.target.value as any })}
-                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5"
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => setEditingPostId(editingPostId === post.id ? null : post.id)}
+                          className="p-2 hover:bg-white/5 rounded-lg text-zinc-400"
                         >
-                          <option value="published">Published</option>
-                          <option value="draft">Draft</option>
-                        </select>
-                        <input 
-                          value={post.category}
-                          onChange={(e) => updatePost(post.id, { category: e.target.value })}
-                          className="bg-zinc-950 text-[10px] font-bold uppercase rounded-lg px-3 py-1 border border-white/5 w-24"
-                          placeholder="Category"
-                        />
+                          <Settings size={18} />
+                        </button>
+                        <button 
+                          onClick={() => updatePosts(posts.filter(p => p.id !== post.id))}
+                          className="p-2 hover:bg-rose-500/10 rounded-lg text-rose-500"
+                        >
+                          <Trash2 size={18} />
+                        </button>
                       </div>
-                      <button 
-                        onClick={() => updatePosts(posts.filter(p => p.id !== post.id))}
-                        className="text-rose-500 hover:text-rose-400 p-2"
-                      >
-                        <Trash2 size={16} />
-                      </button>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'navigation' && (
-            <div className="space-y-8">
-              <h3 className="text-lg font-bold font-jakarta">Main Menu Editor</h3>
-              <div className="grid gap-4">
-                {config.navigation.map(item => (
-                  <div key={item.id} className="p-4 rounded-3xl bg-zinc-900 border border-white/5 flex items-center gap-4">
-                    <div className="flex-grow grid grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-zinc-500">Label</label>
-                        <input 
-                          value={item.label}
-                          onChange={(e) => updateNavItem(item.id, { label: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
-                        />
+                    {editingPostId === post.id && (
+                      <div className="space-y-6 pt-6 border-t border-white/5 animate-in slide-in-from-top-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-zinc-500 uppercase">Title</label>
+                            <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm" value={post.title} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, title: e.target.value } : p))} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-zinc-500 uppercase">Slug</label>
+                            <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm" value={post.slug} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, slug: e.target.value } : p))} />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                           <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-zinc-500 uppercase">Category</label>
+                            <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm" value={post.category} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, category: e.target.value } : p))} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-zinc-500 uppercase">Status</label>
+                            <select className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-[10px] uppercase font-bold" value={post.status} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, status: e.target.value as any } : p))}>
+                              <option value="draft">Draft</option>
+                              <option value="published">Published</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase">Excerpt (Summary)</label>
+                          <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs" rows={2} value={post.excerpt} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, excerpt: e.target.value } : p))} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase">Main Story Content</label>
+                          <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs h-40" value={post.content} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, content: e.target.value } : p))} />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase">Feature Image URL</label>
+                          <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-[10px]" value={post.image} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, image: e.target.value } : p))} />
+                        </div>
                       </div>
-                      <div className="space-y-1">
-                        <label className="text-[10px] uppercase font-bold text-zinc-500">Target Section ID</label>
-                        <input 
-                          value={item.target}
-                          onChange={(e) => updateNavItem(item.id, { target: e.target.value })}
-                          className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
-                        />
-                      </div>
-                    </div>
+                    )}
                   </div>
                 ))}
-                <button 
-                  onClick={() => updateConfig({ 
-                    navigation: [...config.navigation, { id: Math.random().toString(), label: 'New Link', target: 'hero' }] 
-                  })}
-                  className="w-full p-4 border-2 border-dashed border-white/5 rounded-3xl text-zinc-600 hover:text-zinc-400 hover:border-white/10 transition-all text-sm font-bold flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Add Custom Link
-                </button>
               </div>
             </div>
           )}
 
           {activeTab === 'design' && (
             <div className="space-y-12">
-              <section className="space-y-6">
-                <h3 className="text-lg font-bold font-jakarta">Homepage Layout Management</h3>
-                <div className="rounded-3xl bg-zinc-900 border border-white/5 overflow-hidden">
-                  {config.sections.map((section, idx) => (
-                    <div key={section.id} className="flex items-center justify-between p-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
-                      <div className="flex items-center gap-4">
-                        <div className="flex flex-col gap-1">
-                          <button onClick={() => handleSectionMove(idx, 'up')} className="p-1 hover:text-white text-zinc-600"><ArrowUp size={14}/></button>
-                          <button onClick={() => handleSectionMove(idx, 'down')} className="p-1 hover:text-white text-zinc-600"><ArrowDown size={14}/></button>
-                        </div>
-                        <span className="text-sm font-bold">{section.name}</span>
+              <SectionHeader title="Theme Master" subtitle="Orchestrate the visual identity of Elengi Ya Malewa." />
+              
+              <div className="grid gap-10">
+                {/* Color System */}
+                <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2.5rem] space-y-8">
+                  <div className="flex items-center gap-3">
+                    <Palette className="text-orange-500" size={20} />
+                    <h5 className="font-bold text-white">Color Alchemy</h5>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Primary Identity (Neon)</label>
+                      <div className="flex gap-4 items-center">
+                        <input type="color" className="w-12 h-12 rounded-xl bg-transparent" value={config.design.primaryColor} onChange={e => updateConfig({ design: { ...config.design, primaryColor: e.target.value } })} />
+                        <input className="flex-grow bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs font-mono" value={config.design.primaryColor} onChange={e => updateConfig({ design: { ...config.design, primaryColor: e.target.value } })} />
                       </div>
-                      <button 
-                        onClick={() => handleSectionToggle(section.id)}
-                        className={`p-2 rounded-lg transition-all ${section.visible ? 'text-green-500 bg-green-500/10' : 'text-zinc-600 bg-zinc-800'}`}
-                      >
-                        {section.visible ? <Eye size={18}/> : <EyeOff size={18}/>}
-                      </button>
                     </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="space-y-6">
-                <h3 className="text-lg font-bold font-jakarta">Global Styles</h3>
-                <div className="grid grid-cols-2 gap-6 p-6 rounded-3xl bg-zinc-900 border border-white/5">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-zinc-500">Brand Color</label>
-                    <div className="flex gap-2">
-                      {['#f97316', '#e11d48', '#9333ea', '#2563eb', '#16a34a'].map(color => (
-                        <button 
-                          key={color}
-                          onClick={() => updateConfig({ design: { ...config.design, primaryColor: color } })}
-                          className={`h-8 w-8 rounded-full border-2 ${config.design.primaryColor === color ? 'border-white' : 'border-transparent'}`}
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Accent Secondary</label>
+                      <div className="flex gap-4 items-center">
+                        <input type="color" className="w-12 h-12 rounded-xl bg-transparent" value={config.design.accentColor} onChange={e => updateConfig({ design: { ...config.design, accentColor: e.target.value } })} />
+                        <input className="flex-grow bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-xs font-mono" value={config.design.accentColor} onChange={e => updateConfig({ design: { ...config.design, accentColor: e.target.value } })} />
+                      </div>
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-zinc-500">Typography</label>
+                </div>
+
+                {/* Typography & Shape */}
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2.5rem] space-y-8">
+                    <div className="flex items-center gap-3">
+                      <Type className="text-orange-500" size={20} />
+                      <h5 className="font-bold text-white">Typography</h5>
+                    </div>
                     <select 
+                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm font-medium"
                       value={config.design.fontFamily}
-                      onChange={(e) => updateConfig({ design: { ...config.design, fontFamily: e.target.value } })}
-                      className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-sm"
+                      onChange={e => updateConfig({ design: { ...config.design, fontFamily: e.target.value as any } })}
                     >
-                      <option value="Inter">Inter (Default)</option>
-                      <option value="Plus Jakarta Sans">Plus Jakarta (Modern)</option>
+                      <option value="Plus Jakarta Sans">Modern: Plus Jakarta Sans</option>
+                      <option value="Inter">Classic: Inter</option>
+                      <option value="Playfair Display">Elegant: Playfair Display</option>
+                      <option value="Montserrat">Bold: Montserrat</option>
                     </select>
                   </div>
-                </div>
-              </section>
-            </div>
-          )}
 
-          {activeTab === 'seo' && (
-            <div className="space-y-8">
-              <h3 className="text-lg font-bold font-jakarta">SEO & Metadata</h3>
-              <div className="p-8 rounded-3xl bg-zinc-900 border border-white/5 space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold text-zinc-500">Meta Page Title</label>
-                  <input 
-                    value={config.seo.title}
-                    onChange={(e) => updateConfig({ seo: { ...config.seo, title: e.target.value } })}
-                    className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm"
-                  />
+                  <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2.5rem] space-y-8">
+                    <div className="flex items-center gap-3">
+                      <Square className="text-orange-500" size={20} />
+                      <h5 className="font-bold text-white">Corners</h5>
+                    </div>
+                    <div className="space-y-4">
+                       <input 
+                        type="range" min="0" max="40" step="2"
+                        className="w-full accent-orange-600"
+                        value={parseInt(config.design.borderRadius)}
+                        onChange={e => updateConfig({ design: { ...config.design, borderRadius: `${e.target.value}px` } })}
+                      />
+                      <div className="flex justify-between text-[9px] font-black text-zinc-600 uppercase">
+                        <span>Sharp (0px)</span>
+                        <span>Current: {config.design.borderRadius}</span>
+                        <span>Soft (40px)</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold text-zinc-500">Meta Description</label>
-                  <textarea 
-                    value={config.seo.description}
-                    onChange={(e) => updateConfig({ seo: { ...config.seo, description: e.target.value } })}
-                    rows={4}
-                    className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-sm resize-none"
-                  />
+
+                {/* Visual Depth */}
+                <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2.5rem] space-y-8">
+                  <div className="flex items-center gap-3">
+                    <Layers className="text-orange-500" size={20} />
+                    <h5 className="font-bold text-white">Glassmorphism & Transparency</h5>
+                  </div>
+                  <div className="space-y-4">
+                     <input 
+                      type="range" min="0.1" max="1" step="0.05"
+                      className="w-full accent-orange-600"
+                      value={parseFloat(config.design.glassOpacity)}
+                      onChange={e => updateConfig({ design: { ...config.design, glassOpacity: e.target.value } })}
+                    />
+                    <div className="flex justify-between text-[9px] font-black text-zinc-600 uppercase tracking-widest">
+                      <span>Crystal (10%)</span>
+                      <span>Card Opacity: {Math.round(parseFloat(config.design.glassOpacity) * 100)}%</span>
+                      <span>Solid (100%)</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
+
+          {activeTab === 'content' && (
+            <div className="space-y-12">
+              <SectionHeader title="Hero Experience" subtitle="Manage the first thing users see on landing." />
+              <div className="grid gap-6 p-8 rounded-[2.5rem] bg-zinc-900 border border-white/5">
+                <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm" value={config.hero.title} onChange={e => updateConfig({ hero: { ...config.hero, title: e.target.value } })} placeholder="Title" />
+                <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm text-orange-500 font-bold" value={config.hero.accentWord} onChange={e => updateConfig({ hero: { ...config.hero, accentWord: e.target.value } })} placeholder="Accent Word" />
+                <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm resize-none" rows={3} value={config.hero.description} onChange={e => updateConfig({ hero: { ...config.hero, description: e.target.value } })} />
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase font-bold text-zinc-600">Background URL</label>
+                  <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-5 py-3 text-sm" value={config.hero.image} onChange={e => updateConfig({ hero: { ...config.hero, image: e.target.value } })} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'menu' && (
+            <div className="space-y-12">
+               <div className="flex justify-between items-center">
+                 <SectionHeader title="Product Catalog" subtitle="Edit dishes, prices, ingredients and nutrition." />
+                 <button onClick={() => updateMenuItems([...menuItems, { id: Date.now().toString(), name: 'New Item', price: 0, description: '', category: MenuCategory.MAIN, image: '', tags: [] }])} className="px-6 py-3 bg-orange-600 rounded-xl text-[10px] font-bold uppercase tracking-widest text-white hover:bg-orange-500 shadow-xl">New Product</button>
+               </div>
+               <div className="grid gap-6">
+                 {menuItems.map(item => (
+                   <div key={item.id} className={`p-8 bg-zinc-900 border ${editingMenuItemId === item.id ? 'border-orange-500' : 'border-white/5'} rounded-[2.5rem] flex flex-col gap-8 group transition-all`}>
+                      <div className="flex gap-8">
+                        <div className="w-32 h-32 bg-zinc-950 rounded-3xl overflow-hidden shrink-0">
+                           <img src={item.image} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-grow space-y-4">
+                          <div className="flex justify-between">
+                            <input className="bg-transparent border-b border-white/5 text-lg font-bold w-full mr-4 text-white" value={item.name} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, name: e.target.value } : i))} />
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => setEditingMenuItemId(editingMenuItemId === item.id ? null : item.id)} className="p-2 hover:bg-white/5 rounded-lg text-zinc-500 hover:text-white transition-colors">
+                                <Settings size={18} />
+                              </button>
+                              <button onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} className="text-rose-500 hover:bg-rose-500/10 p-2 rounded-lg transition-colors">
+                                <Trash2 size={18}/>
+                              </button>
+                            </div>
+                          </div>
+                          <textarea className="w-full bg-zinc-950/50 border border-white/5 rounded-xl p-3 text-xs text-zinc-400" rows={2} value={item.description} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, description: e.target.value } : i))} />
+                          <div className="flex items-center gap-4">
+                             <input type="number" className="w-24 bg-zinc-950 border border-white/5 rounded-xl px-3 py-1 text-sm font-bold" value={item.price} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, price: Number(e.target.value) } : i))} />
+                             <select className="bg-zinc-950 border border-white/5 rounded-xl px-3 py-1 text-[10px] uppercase font-bold" value={item.category} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, category: e.target.value as MenuCategory } : i))}>
+                               {Object.values(MenuCategory).map(c => <option key={c} value={c}>{c}</option>)}
+                             </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      {editingMenuItemId === item.id && (
+                        <div className="pt-8 border-t border-white/5 space-y-8 animate-in slide-in-from-top duration-300">
+                          <div className="space-y-6">
+                            <div className="flex items-center gap-2 text-[10px] font-bold text-orange-500 uppercase tracking-widest">
+                              <Activity size={12} />
+                              Nutritional Data
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase">Calories</label>
+                                <input 
+                                  className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-xs" 
+                                  value={item.nutrition?.calories || ''} 
+                                  onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...i.nutrition, calories: e.target.value } } : i))}
+                                  placeholder="e.g. 500 kcal"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase">Protein</label>
+                                <input 
+                                  className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-xs" 
+                                  value={item.nutrition?.protein || ''} 
+                                  onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...i.nutrition, protein: e.target.value } } : i))}
+                                  placeholder="e.g. 20g"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase">Total Fat</label>
+                                <input 
+                                  className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-xs" 
+                                  value={item.nutrition?.fat || ''} 
+                                  onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...i.nutrition, fat: e.target.value } } : i))}
+                                  placeholder="e.g. 15g"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase">Carbs</label>
+                                <input 
+                                  className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-xs" 
+                                  value={item.nutrition?.carbs || ''} 
+                                  onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...i.nutrition, carbs: e.target.value } } : i))}
+                                  placeholder="e.g. 45g"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Image Source URL</label>
+                             <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-mono" value={item.image} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, image: e.target.value } : i))} />
+                          </div>
+                        </div>
+                      )}
+                   </div>
+                 ))}
+               </div>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="fixed bottom-0 right-0 left-72 p-8 bg-zinc-900/80 backdrop-blur-xl border-t border-white/5 flex justify-end">
+         <button onClick={onClose} className="px-10 py-4 bg-white text-zinc-950 rounded-2xl font-bold shadow-2xl hover:bg-orange-600 hover:text-white transition-all">Save & Publish All Changes</button>
       </div>
     </div>
   );

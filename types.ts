@@ -19,6 +19,12 @@ export interface MenuItem {
   spicy?: boolean;
   healthy?: boolean;
   glutenFree?: boolean;
+  nutrition?: {
+    calories?: string;
+    protein?: string;
+    fat?: string;
+    carbs?: string;
+  };
 }
 
 export interface Post {
@@ -62,6 +68,34 @@ export interface SiteConfig {
     secondaryButtonText: string;
     image: string;
   };
+  about: {
+    title: string;
+    subtitle?: string;
+    quote?: {
+      text: string;
+      author: string;
+      role: string;
+    };
+    sections: {
+      id: string;
+      title: string;
+      text: string;
+      image: string;
+    }[];
+  };
+  stats: {
+    id: string;
+    label: string;
+    value: string;
+  }[];
+  footer: {
+    whatsapp: string;
+    socials: {
+      instagram: string;
+      twitter: string;
+      facebook: string;
+    };
+  };
   experience: {
     title: string;
     items: {
@@ -74,7 +108,10 @@ export interface SiteConfig {
   };
   design: {
     primaryColor: string;
-    fontFamily: string;
+    accentColor: string;
+    borderRadius: string;
+    fontFamily: 'Plus Jakarta Sans' | 'Inter' | 'Playfair Display' | 'Montserrat';
+    glassOpacity: string;
     theme: 'dark' | 'light';
   };
   seo: {
