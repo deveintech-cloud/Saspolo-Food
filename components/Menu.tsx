@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Flame, Leaf, Wheat, Plus, ArrowRight } from 'lucide-react';
+import { Flame, Leaf, Wheat, MessageCircle, ArrowRight } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 import { MenuCategory } from '../types.ts';
 
@@ -12,6 +12,12 @@ const Menu: React.FC = () => {
     if (activeCategory === MenuCategory.ALL) return menuItems;
     return menuItems.filter(item => item.category === activeCategory);
   }, [activeCategory, menuItems]);
+
+  const handleWhatsAppOrder = (itemName: string, price: number) => {
+    const phoneNumber = "27658456336";
+    const message = encodeURIComponent(`Hello Elengi Ya Malewa, I would like to order the ${itemName} for R${price}.`);
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
 
   return (
     <section id="menu" className="py-24 px-6 relative bg-zinc-950">
@@ -81,10 +87,12 @@ const Menu: React.FC = () => {
                     )}
                   </div>
                   <button 
-                    className="h-10 w-10 rounded-full bg-zinc-800 text-white flex items-center justify-center transition-all transform hover:rotate-90 hover:opacity-90"
-                    style={{ backgroundColor: config.design.primaryColor }}
+                    onClick={() => handleWhatsAppOrder(item.name, item.price)}
+                    className="h-12 px-4 rounded-xl text-white flex items-center justify-center gap-2 transition-all transform hover:scale-105 shadow-lg font-bold text-xs uppercase tracking-wider"
+                    style={{ backgroundColor: '#25D366' }}
                   >
-                    <Plus size={20} />
+                    <MessageCircle size={18} />
+                    Order Now
                   </button>
                 </div>
               </div>

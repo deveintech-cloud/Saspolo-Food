@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Instagram, Twitter, Facebook, Send } from 'lucide-react';
-import { useSite } from '../SiteContext';
+import { Instagram, Twitter, Facebook, Send, MessageCircle } from 'lucide-react';
+import { useSite } from '../SiteContext.tsx';
 
 interface FooterProps {
   onOpenPrivacy: () => void;
@@ -47,7 +47,7 @@ const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
         {/* Top Section with Newsletter */}
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold font-jakarta">Join the Saspolo Club</h3>
+            <h3 className="text-2xl font-bold font-jakarta">Join the Elengi Club</h3>
             <p className="text-zinc-500 text-sm max-w-sm">Stay updated with our latest seasonal menus, exclusive events, and culinary insights.</p>
           </div>
           <div className="relative">
@@ -88,6 +88,10 @@ const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
               <span className="text-xs text-zinc-500 font-bold uppercase tracking-widest">EST. 2023</span>
             </div>
             <p className="text-zinc-600 text-xs text-center md:text-left">Elevating culinary art through innovation and tradition.</p>
+            <div className="flex items-center gap-2 mt-2 px-4 py-2 bg-zinc-900/50 rounded-full border border-zinc-800">
+              <MessageCircle size={16} className="text-[#25D366]" />
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Order WhatsApp: +27 65 845 6336</span>
+            </div>
           </div>
 
           <div className="flex gap-10">
@@ -100,6 +104,9 @@ const Footer: React.FC<FooterProps> = ({ onOpenPrivacy, onOpenTerms }) => {
             <button className="text-zinc-500 hover:text-orange-500 transition-colors">
               <Facebook size={20} strokeWidth={1.5} />
             </button>
+            <a href="https://wa.me/27658456336" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#25D366] transition-colors">
+              <MessageCircle size={20} strokeWidth={1.5} />
+            </a>
           </div>
 
           <div className="flex flex-col items-center md:items-end gap-2">

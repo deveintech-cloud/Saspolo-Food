@@ -128,8 +128,8 @@ const Reservation: React.FC = () => {
                       <MapPin size={24} strokeWidth={2.5} />
                     </div>
                     <div>
-                      <p className="text-lg font-bold text-white font-jakarta">128 Culinary Ave.</p>
-                      <p className="text-sm text-zinc-400 font-medium tracking-wide">Downtown District, New York</p>
+                      <p className="text-lg font-bold text-white font-jakarta">15 Hunter Street</p>
+                      <p className="text-sm text-zinc-400 font-medium tracking-wide">Yeoville, Johannesburg</p>
                     </div>
                   </div>
                 </div>
