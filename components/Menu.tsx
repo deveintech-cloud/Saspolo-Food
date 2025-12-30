@@ -19,7 +19,7 @@ const Menu: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="space-y-4">
             <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white font-jakarta">Curated Delicacies</h2>
-            <p className="text-zinc-400 max-w-sm text-lg">Hand-picked ingredients prepared with passion and technical precision.</p>
+            <p className="text-zinc-400 max-w-sm text-lg">Hand-picked ingredients prepared with passion and Congolese technical precision.</p>
           </div>
           
           <div className="flex flex-wrap items-center gap-2 bg-zinc-900 border border-zinc-800 p-1.5 rounded-2xl shadow-inner">
@@ -56,7 +56,7 @@ const Menu: React.FC = () => {
               <div className="p-8 flex flex-col flex-grow">
                 <div className="flex justify-between items-start mb-3">
                   <h3 className="text-xl font-bold text-white font-jakarta">{item.name}</h3>
-                  <span className="font-bold text-lg" style={{ color: config.design.primaryColor }}>${item.price}</span>
+                  <span className="font-bold text-lg" style={{ color: config.design.primaryColor }}>R{item.price}</span>
                 </div>
                 <p className="text-sm text-zinc-500 mb-6 leading-relaxed flex-grow">{item.description}</p>
                 <div className="flex items-center justify-between mt-auto">

@@ -9,7 +9,7 @@ const GeminiChef: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Welcome to Saspolo. I am your AI Sommelier. How can I assist your culinary journey today?' }
+    { role: 'model', text: 'Welcome to Elengi Ya Malewa. I am your AI Sommelier. How can I assist your culinary journey today?' }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -30,7 +30,7 @@ const GeminiChef: React.FC = () => {
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setIsLoading(true);
 
-    const menuContext = MENU_ITEMS.map(i => `${i.name}: ${i.description} ($${i.price})`).join('\n');
+    const menuContext = MENU_ITEMS.map(i => `${i.name}: ${i.description} (R${i.price})`).join('\n');
     const response = await getGeminiResponse(userMsg, menuContext);
     
     setMessages(prev => [...prev, { role: 'model', text: response }]);
@@ -47,7 +47,7 @@ const GeminiChef: React.FC = () => {
                 <Bot size={20} className="text-white" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Saspolo Sommelier</p>
+                <p className="text-sm font-bold text-white">Elengi Ya Malewa Sommelier</p>
                 <p className="text-[10px] text-orange-400 font-bold uppercase tracking-widest">AI Expert</p>
               </div>
             </div>

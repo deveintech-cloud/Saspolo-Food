@@ -1,32 +1,26 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Ensure process.env access doesn't throw even if shim fails
-const getApiKey = () => {
-  try {
-    return (typeof process !== 'undefined' ? process.env.API_KEY : (window as any).process?.env?.API_KEY) || "";
-  } catch (e) {
-    return "";
-  }
-};
-
-const API_KEY = getApiKey();
-
+/**
+ * Service to interact with Gemini API for menu recommendations and sommelier advice.
+ * Follows the latest @google/genai SDK guidelines.
+ */
 export const getGeminiResponse = async (prompt: string, menuContext: string) => {
-  if (!API_KEY) {
+  if (!process.env.API_KEY) {
     console.warn("Gemini API Key missing. Sommelier is disabled.");
     return "I'm sorry, I'm currently resting. Please check back later!";
   }
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  // Create a new instance right before making the call to ensure up-to-date configuration.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
       config: {
-        systemInstruction: `You are the Saspolo AI Sommelier and Head Chef. 
-        Your goal is to help customers choose dishes and wine pairings from the Saspolo menu.
+        systemInstruction: `You are the Elengi Ya Malewa AI Sommelier and Head Chef. 
+        Your goal is to help customers choose dishes and wine pairings from the Elengi Ya Malewa menu.
         Be sophisticated, helpful, and concise. 
         Current Menu context: ${menuContext}`,
         temperature: 0.7,
@@ -34,6 +28,7 @@ export const getGeminiResponse = async (prompt: string, menuContext: string) => 
       },
     });
 
+    // Access the generated text content from the .text property (not a method).
     return response.text || "I'm not sure how to answer that. Could you rephrase?";
   } catch (error) {
     console.error("Gemini API Error:", error);

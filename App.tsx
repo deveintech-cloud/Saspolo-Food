@@ -65,7 +65,7 @@ const AdminLogin: React.FC<{ onAuthenticated: () => void; onClose: () => void }>
             <Lock size={32} />
           </div>
           <h2 className="text-2xl font-bold font-jakarta mb-2">Admin Access</h2>
-          <p className="text-zinc-500 text-sm">Please enter your credentials to manage Saspolo CMS.</p>
+          <p className="text-zinc-500 text-sm">Please enter your credentials to manage Elengi Ya Malewa CMS.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -323,7 +323,7 @@ const MainContent: React.FC = () => {
             </section>
             <section className="space-y-3">
               <h3 className="text-xl font-bold text-white">2. Use of Information</h3>
-              <p>We use the information we collect to facilitate reservations, provide customer support, and send you marketing communications. Your data helps us personalize your Saspolo experience.</p>
+              <p>We use the information we collect to facilitate reservations, provide customer support, and send you marketing communications. Your data helps us personalize your Elengi Ya Malewa experience.</p>
             </section>
             <section className="space-y-3">
               <h3 className="text-xl font-bold text-white">3. AI Interactions</h3>
@@ -340,7 +340,7 @@ const MainContent: React.FC = () => {
       {activeOverlay === 'terms' && (
         <Modal title="Terms of Service" onClose={closeOverlay}>
           <div className="prose prose-invert max-w-none space-y-6 text-zinc-400">
-            <p className="text-lg font-medium text-white">Welcome to Saspolo Food Group.</p>
+            <p className="text-lg font-medium text-white">Welcome to Elengi Ya Malewa Food Group.</p>
             <section className="space-y-3">
               <h3 className="text-xl font-bold text-white">1. Reservations</h3>
               <p>All reservations made through this website are subject to availability. We reserve the right to cancel or modify reservations in the event of unforeseen circumstances. Please arrive at least 15 minutes prior to your scheduled time.</p>
@@ -351,7 +351,7 @@ const MainContent: React.FC = () => {
             </section>
             <section className="space-y-3">
               <h3 className="text-xl font-bold text-white">3. Limitation of Liability</h3>
-              <p>Saspolo Food Group shall not be liable for any indirect, incidental, or consequential damages arising from the use of our website or services.</p>
+              <p>Elengi Ya Malewa Food Group shall not be liable for any indirect, incidental, or consequential damages arising from the use of our website or services.</p>
             </section>
             <section className="space-y-3">
               <h3 className="text-xl font-bold text-white">4. Governing Law</h3>
