@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send, X, Bot, Sparkles } from 'lucide-react';
-import { getGeminiResponse } from '../services/geminiService';
-import { MENU_ITEMS } from '../constants';
-import { ChatMessage } from '../types';
+import { getGeminiResponse } from '../services/geminiService.ts';
+import { MENU_ITEMS } from '../constants.tsx';
+import { ChatMessage } from '../types.ts';
 
 const GeminiChef: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

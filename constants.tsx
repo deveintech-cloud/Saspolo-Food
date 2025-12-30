@@ -1,5 +1,5 @@
 
-import { MenuCategory, MenuItem } from './types';
+import { MenuCategory, MenuItem } from './types.ts';
 
 export const MENU_ITEMS: MenuItem[] = [
   {

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, ArrowRight, Menu, X } from 'lucide-react';
-import { useSite } from '../SiteContext';
+import { useSite } from '../SiteContext.tsx';
 
 const Navbar: React.FC = () => {
   const { config } = useSite();

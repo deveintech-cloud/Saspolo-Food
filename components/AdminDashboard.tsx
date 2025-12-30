@@ -4,7 +4,7 @@ import {
   Layout, 
   Settings, 
   FileText, 
-  Image as ImageIcon, 
+  ImageIcon, 
   Search, 
   ChevronRight, 
   Save, 
@@ -22,8 +22,8 @@ import {
   X,
   PlusCircle
 } from 'lucide-react';
-import { useSite } from '../SiteContext';
-import { MenuCategory, MenuItem, Post, NavItem } from '../types';
+import { useSite } from '../SiteContext.tsx';
+import { MenuCategory, MenuItem, Post, NavItem } from '../types.ts';
 
 const AddDishModal: React.FC<{ onSave: (dish: MenuItem) => void, onClose: () => void }> = ({ onSave, onClose }) => {
   const [formData, setFormData] = useState<MenuItem>({

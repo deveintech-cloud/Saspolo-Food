@@ -1,16 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Stats from './components/Stats';
-import Menu from './components/Menu';
-import Reservation from './components/Reservation';
-import Footer from './components/Footer';
-import GeminiChef from './components/GeminiChef';
-import AdminDashboard from './components/AdminDashboard';
-import { SiteProvider, useSite } from './SiteContext';
+import Navbar from './components/Navbar.tsx';
+import Hero from './components/Hero.tsx';
+import Stats from './components/Stats.tsx';
+import Menu from './components/Menu.tsx';
+import Reservation from './components/Reservation.tsx';
+import Footer from './components/Footer.tsx';
+import GeminiChef from './components/GeminiChef.tsx';
+import AdminDashboard from './components/AdminDashboard.tsx';
+import { SiteProvider, useSite } from './SiteContext.tsx';
 import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn, ChevronLeft, Calendar, Tag } from 'lucide-react';
-import { Post } from './types';
+import { Post } from './types.ts';
 
 // Securely obfuscated key check (Base64 of "Daniel1$")
 const _AUTH_SECRET = "RGFuaWVsMSQ=";

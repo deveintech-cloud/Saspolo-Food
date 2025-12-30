@@ -1,8 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Flame, Leaf, Wheat, Plus, ArrowRight } from 'lucide-react';
-import { useSite } from '../SiteContext';
-import { MenuCategory } from '../types';
+import { useSite } from '../SiteContext.tsx';
+import { MenuCategory } from '../types.ts';
 
 const Menu: React.FC = () => {
   const { menuItems, config } = useSite();

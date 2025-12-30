@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ShoppingBag, Star, ChevronRight } from 'lucide-react';
-import { useSite } from '../SiteContext';
+import { useSite } from '../SiteContext.tsx';
 
 const Hero: React.FC = () => {
   const { config } = useSite();

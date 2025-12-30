@@ -1,7 +1,8 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const API_KEY = process.env.API_KEY || "";
+// Standard way to access process.env in this environment, with a fallback to window.process
+const API_KEY = (typeof process !== 'undefined' ? process.env.API_KEY : (window as any).process?.env?.API_KEY) || "";
 
 export const getGeminiResponse = async (prompt: string, menuContext: string) => {
   if (!API_KEY) return "I'm sorry, I'm currently resting. Please check back later!";

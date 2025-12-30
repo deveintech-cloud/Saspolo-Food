@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SiteConfig, MenuItem, MenuCategory, Post, NavItem } from './types';
-import { MENU_ITEMS as INITIAL_MENU } from './constants';
+import { SiteConfig, MenuItem, MenuCategory, Post, NavItem } from './types.ts';
+import { MENU_ITEMS as INITIAL_MENU } from './constants.tsx';
 
 const DEFAULT_POSTS: Post[] = [
   {
