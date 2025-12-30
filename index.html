@@ -26,12 +26,17 @@
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200">
 
     <!-- PWA & Mobile Icons -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/ios-filled/180/f97316/restaurant.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/ios-filled/32/f97316/restaurant.png">
     <link rel="icon" type="image/png" sizes="16x16" href="https://img.icons8.com/ios-filled/16/f97316/restaurant.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Environment Shim for Static Hosting -->
+    <script>
+      window.process = { env: { API_KEY: "" } };
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -73,5 +78,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-50 antialiased selection:bg-orange-500 selection:text-white">
     <div id="root"></div>
+    <!-- Explicitly load the entry point module -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
