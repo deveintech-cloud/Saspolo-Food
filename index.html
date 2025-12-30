@@ -3,9 +3,36 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Saspolo Food | Modern Gastronomy</title>
-    <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/50/f97316/restaurant.png">
+    
+    <!-- Meta Tags for All Platforms -->
+    <meta name="description" content="Luxury culinary experience featuring curated seasonal menus, an AI Sommelier, and world-class gastronomy.">
+    <meta name="keywords" content="Saspolo, Restaurant, Fine Dining, Gastronomy, AI Chef, Reservations, New York Food">
+    <meta name="theme-color" content="#09090b">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://saspolo.food/">
+    <meta property="og:title" content="Saspolo Food | Modern Gastronomy">
+    <meta property="og:description" content="Elevating culinary art through innovation and tradition. Experience our AI-powered Sommelier.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://saspolo.food/">
+    <meta property="twitter:title" content="Saspolo Food | Modern Gastronomy">
+    <meta property="twitter:description" content="Elevating culinary art through innovation and tradition. Experience our AI-powered Sommelier.">
+    <meta property="twitter:image" content="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200">
+
+    <!-- PWA & Mobile Icons -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/ios-filled/180/f97316/restaurant.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/ios-filled/32/f97316/restaurant.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://img.icons8.com/ios-filled/16/f97316/restaurant.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -22,6 +49,14 @@
         }
         .toggle-checkbox:checked + .toggle-label {
             background-color: #f97316;
+        }
+
+        /* Improved touch targets for mobile */
+        @media (max-width: 640px) {
+            button, a {
+                min-height: 44px;
+                min-width: 44px;
+            }
         }
     </style>
 <script type="importmap">
