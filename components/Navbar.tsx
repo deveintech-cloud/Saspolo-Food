@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, ArrowRight, Menu, X } from 'lucide-react';
+import { Search, ArrowRight, Menu, X, Globe } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 
 const Navbar: React.FC = () => {
-  const { config } = useSite();
+  const { config, language, setLanguage, t } = useSite();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -37,11 +37,28 @@ const Navbar: React.FC = () => {
         
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
           {config.navigation.map(nav => (
-            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="hover:text-white transition-colors">{nav.label}</button>
+            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="hover:text-white transition-colors capitalize">
+              {t(nav.label)}
+            </button>
           ))}
         </div>
 
         <div className="flex items-center gap-4">
+          <div className="flex bg-zinc-900 border border-white/5 rounded-full p-1 mr-2">
+            <button 
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 text-[10px] font-bold rounded-full transition-all ${language === 'en' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
+            >
+              EN
+            </button>
+            <button 
+              onClick={() => setLanguage('fr')}
+              className={`px-2 py-1 text-[10px] font-bold rounded-full transition-all ${language === 'fr' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
+            >
+              FR
+            </button>
+          </div>
+
           <button className="hidden md:flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5 transition-all">
             <Search size={18} strokeWidth={1.5} />
           </button>
@@ -50,7 +67,7 @@ const Navbar: React.FC = () => {
             style={{ backgroundColor: isScrolled ? 'white' : 'transparent', color: isScrolled ? 'black' : 'white', border: isScrolled ? 'none' : '1px solid rgba(255,255,255,0.2)' }}
             className="px-5 py-2.5 rounded-full text-xs font-bold tracking-tight hover:opacity-80 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-white/5"
           >
-            Reserve Table
+            {t('reserve')}
             <ArrowRight size={14} strokeWidth={2} />
           </button>
           
@@ -66,14 +83,21 @@ const Navbar: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden fixed inset-0 top-16 bg-zinc-950/95 backdrop-blur-xl z-40 p-8 flex flex-col gap-8 animate-in slide-in-from-top duration-300 border-t border-white/5">
           {config.navigation.map(nav => (
-            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="text-3xl font-bold font-jakarta text-left">{nav.label}</button>
+            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="text-3xl font-bold font-jakarta text-left capitalize">
+              {t(nav.label)}
+            </button>
           ))}
+          <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+             <button onClick={() => setLanguage('en')} className={`text-sm font-bold ${language === 'en' ? 'text-orange-500' : 'text-zinc-500'}`}>English</button>
+             <span className="text-zinc-800">/</span>
+             <button onClick={() => setLanguage('fr')} className={`text-sm font-bold ${language === 'fr' ? 'text-orange-500' : 'text-zinc-500'}`}>Français</button>
+          </div>
           <button 
             onClick={() => scrollToSection('reserve')} 
             className="mt-4 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl"
             style={{ backgroundColor: config.design.primaryColor }}
           >
-            Reserve Table
+            {t('reserve')}
             <ArrowRight size={20} />
           </button>
         </div>

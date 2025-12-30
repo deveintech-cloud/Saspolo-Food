@@ -4,15 +4,22 @@ import { MessageSquare, Send, X, Bot, Sparkles } from 'lucide-react';
 import { getGeminiResponse } from '../services/geminiService.ts';
 import { MENU_ITEMS } from '../constants.tsx';
 import { ChatMessage } from '../types.ts';
+import { useSite } from '../SiteContext.tsx';
 
 const GeminiChef: React.FC = () => {
+  const { language } = useSite();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Welcome to Elengi Ya Malewa. I am your AI Sommelier. How can I assist your culinary journey today?' }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const greeting = language === 'fr' 
+      ? 'Bienvenue à Elengi Ya Malewa. Je suis votre Sommelier IA. Comment puis-je vous aider dans votre voyage culinaire aujourd\'hui?'
+      : 'Welcome to Elengi Ya Malewa. I am your AI Sommelier. How can I assist your culinary journey today?';
+    setMessages([{ role: 'model', text: greeting }]);
+  }, [language]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -87,7 +94,7 @@ const GeminiChef: React.FC = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask about pairings or menu items..."
+                placeholder={language === 'fr' ? "Posez une question..." : "Ask about pairings..."}
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-2xl py-3 pl-4 pr-12 text-sm focus:outline-none focus:border-orange-500 transition-colors"
               />
               <button 
@@ -110,7 +117,7 @@ const GeminiChef: React.FC = () => {
           </div>
           <MessageSquare size={28} />
           <div className="absolute right-full mr-4 bg-zinc-900 border border-zinc-800 text-white text-xs py-2 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold shadow-xl">
-            Ask our Sommelier
+            {language === 'fr' ? 'Parlez à notre Sommelier' : 'Ask our Sommelier'}
           </div>
         </button>
       )}

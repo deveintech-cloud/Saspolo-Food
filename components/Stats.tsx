@@ -1,12 +1,14 @@
 
 import React from 'react';
+import { useSite } from '../SiteContext.tsx';
 
 const Stats: React.FC = () => {
+  const { t } = useSite();
   const stats = [
-    { label: 'Years Experience', value: '15+' },
-    { label: 'Happy Customers', value: '24k' },
-    { label: 'Organic Sourced', value: '100%' },
-    { label: 'Average Rating', value: '4.9' },
+    { label: 'yearsExp', value: '15+' },
+    { label: 'happyCust', value: '24k' },
+    { label: 'organicSrc', value: '100%' },
+    { label: 'avgRating', value: '4.9' },
   ];
 
   return (
@@ -18,7 +20,7 @@ const Stats: React.FC = () => {
               {stat.value}
             </span>
             <span className="text-[10px] text-zinc-500 uppercase tracking-[0.3em] font-bold">
-              {stat.label}
+              {t(stat.label)}
             </span>
           </div>
         ))}

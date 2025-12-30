@@ -4,7 +4,7 @@ import { ShoppingBag, Star, ChevronRight } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 
 const Hero: React.FC = () => {
-  const { config } = useSite();
+  const { config, t } = useSite();
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -25,7 +25,7 @@ const Hero: React.FC = () => {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
             <span className="flex h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: config.design.primaryColor }}></span>
-            <span className="text-[10px] md:text-xs font-semibold text-zinc-300 tracking-wider uppercase">New Seasonal Menu Available</span>
+            <span className="text-[10px] md:text-xs font-semibold text-zinc-300 tracking-wider uppercase">{t('newMenu')}</span>
           </div>
 
           <h1 className="text-5xl md:text-8xl leading-[1.05] font-medium tracking-tight font-jakarta">
@@ -33,7 +33,6 @@ const Hero: React.FC = () => {
             <span className="block text-transparent bg-clip-text" style={{ backgroundImage: `linear-gradient(to right, ${config.design.primaryColor}, #f43f5e, #a855f7)` }}>
               {config.hero.accentWord}
             </span>
-            the senses.
           </h1>
 
           <p className="text-lg text-zinc-400 max-w-md leading-relaxed">
@@ -46,14 +45,14 @@ const Hero: React.FC = () => {
               style={{ backgroundColor: config.design.primaryColor }}
               className="group h-14 px-8 rounded-full text-white font-bold text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-[0_0_25px_-5px_rgba(0,0,0,0.5)]"
             >
-              {config.hero.buttonText}
+              {t('seeMenu')}
               <ShoppingBag size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
-              onClick={() => scrollToSection('menu')}
+              onClick={() => scrollToSection('reserve')}
               className="group h-14 px-8 rounded-full border border-zinc-800 text-zinc-300 font-bold text-sm hover:border-zinc-700 hover:text-white transition-all bg-zinc-900/50 backdrop-blur-sm flex items-center justify-center gap-2"
             >
-              {config.hero.secondaryButtonText}
+              {t('bookTable')}
               <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -74,8 +73,8 @@ const Hero: React.FC = () => {
               <Star size={24} fill="currentColor" strokeWidth={0} />
             </div>
             <div>
-              <div className="text-sm font-bold text-white">Top Rated</div>
-              <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Michelin Guide '24</div>
+              <div className="text-sm font-bold text-white">{t('topRated')}</div>
+              <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">{t('michelin')}</div>
             </div>
           </div>
         </div>

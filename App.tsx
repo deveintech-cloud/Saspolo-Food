@@ -98,7 +98,7 @@ const AdminLogin: React.FC<{ onAuthenticated: () => void; onClose: () => void }>
 };
 
 const MainContent: React.FC = () => {
-  const { config, posts } = useSite();
+  const { config, posts, t } = useSite();
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -110,7 +110,7 @@ const MainContent: React.FC = () => {
     experience: (
       <section id="experience" className="py-24 px-6 bg-zinc-950 border-t border-white/5">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold font-jakarta mb-20 text-center tracking-tight">{config.experience.title}</h2>
+          <h2 className="text-3xl md:text-5xl font-bold font-jakarta mb-20 text-center tracking-tight">{t(config.experience.title)}</h2>
           <div className="grid md:grid-cols-3 gap-16">
             {config.experience.items.map(item => {
               const Icon = item.icon === 'Sparkles' ? Sparkles : item.icon === 'Utensils' ? Utensils : Camera;
@@ -125,8 +125,8 @@ const MainContent: React.FC = () => {
                     <Icon size={28} />
                   </div>
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-bold font-jakarta">{item.title}</h3>
-                    <p className="text-zinc-500 text-sm leading-relaxed">{item.description}</p>
+                    <h3 className="text-2xl font-bold font-jakarta">{t(item.title)}</h3>
+                    <p className="text-zinc-500 text-sm leading-relaxed">{t(item.description)}</p>
                   </div>
                 </div>
               );
@@ -142,14 +142,14 @@ const MainContent: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
             <div className="space-y-4">
-              <h2 className="text-3xl md:text-5xl font-bold font-jakarta tracking-tight">Latest from the Kitchen</h2>
+              <h2 className="text-3xl md:text-5xl font-bold font-jakarta tracking-tight">{t('stories')}</h2>
               <p className="text-zinc-500 text-lg">Stories, news, and culinary secrets from our experts.</p>
             </div>
             <button 
               onClick={() => setActiveOverlay('stories')}
               className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors group"
             >
-              View All Stories
+              {t('viewAll')}
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -160,7 +160,7 @@ const MainContent: React.FC = () => {
                   <img 
                     src={post.image} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale-[40%] group-hover:grayscale-0" 
-                    alt={post.title} 
+                    alt={t(post.title)} 
                   />
                   <div className="absolute top-6 left-6">
                     <span className="bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-white/20">
@@ -174,8 +174,8 @@ const MainContent: React.FC = () => {
                     <span className="h-1 w-1 rounded-full bg-zinc-800"></span>
                     <span>5 min read</span>
                   </div>
-                  <h3 className="text-3xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{post.title}</h3>
-                  <p className="text-zinc-400 leading-relaxed line-clamp-2">{post.excerpt}</p>
+                  <h3 className="text-3xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{t(post.title)}</h3>
+                  <p className="text-zinc-400 leading-relaxed line-clamp-2">{t(post.excerpt)}</p>
                 </div>
               </div>
             ))}
@@ -233,14 +233,14 @@ const MainContent: React.FC = () => {
       {/* Overlays */}
       {activeOverlay === 'stories' && (
         <Modal 
-          title={selectedPost ? "Story Details" : "Our Stories"} 
+          title={selectedPost ? t("storyDetails") : t("ourStories")} 
           onClose={closeOverlay}
           onBack={selectedPost ? () => setSelectedPost(null) : undefined}
         >
           {selectedPost ? (
             <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="relative aspect-[21/9] rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <img src={selectedPost.image} className="w-full h-full object-cover" alt={selectedPost.title} />
+                <img src={selectedPost.image} className="w-full h-full object-cover" alt={t(selectedPost.title)} />
                 <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent"></div>
               </div>
               
@@ -257,14 +257,14 @@ const MainContent: React.FC = () => {
                 </div>
                 
                 <h1 className="text-4xl md:text-6xl font-bold font-jakarta leading-tight text-white">
-                  {selectedPost.title}
+                  {t(selectedPost.title)}
                 </h1>
                 
                 <div className="w-20 h-1 bg-orange-600 rounded-full"></div>
                 
                 <div className="prose prose-invert max-w-none">
                   <p className="text-xl text-zinc-300 leading-relaxed font-medium italic mb-8">
-                    {selectedPost.excerpt}
+                    {t(selectedPost.excerpt)}
                   </p>
                   <div className="text-zinc-400 leading-[1.8] space-y-6 text-lg">
                     {selectedPost.content.split('\n').map((para, i) => (
@@ -280,7 +280,7 @@ const MainContent: React.FC = () => {
                   className="px-10 py-4 bg-zinc-800 hover:bg-zinc-700 text-white rounded-2xl font-bold text-sm transition-all flex items-center gap-3 group"
                 >
                   <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                  Back to All Stories
+                  {t('backToStories')}
                 </button>
               </div>
             </div>
@@ -293,15 +293,15 @@ const MainContent: React.FC = () => {
                   className="group cursor-pointer flex flex-col h-full bg-zinc-950/40 p-4 rounded-[2rem] border border-white/5 hover:border-white/10 transition-all hover:-translate-y-1 duration-300"
                 >
                   <div className="aspect-video rounded-2xl overflow-hidden mb-6">
-                    <img src={post.image} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={post.title} />
+                    <img src={post.image} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={t(post.title)} />
                   </div>
                   <div className="flex-grow space-y-3">
                     <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                       <span className="text-orange-500/80">{post.category}</span>
                       <span>{post.date}</span>
                     </div>
-                    <h3 className="text-xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{post.title}</h3>
-                    <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
+                    <h3 className="text-xl font-bold font-jakarta group-hover:text-orange-500 transition-colors leading-snug">{t(post.title)}</h3>
+                    <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3">{t(post.excerpt)}</p>
                   </div>
                   <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-bold text-zinc-300 group-hover:text-orange-500 transition-colors">
                     Read Full Story <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />

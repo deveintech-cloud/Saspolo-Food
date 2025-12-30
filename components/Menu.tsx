@@ -5,7 +5,7 @@ import { useSite } from '../SiteContext.tsx';
 import { MenuCategory } from '../types.ts';
 
 const Menu: React.FC = () => {
-  const { menuItems, config } = useSite();
+  const { menuItems, config, t, language } = useSite();
   const [activeCategory, setActiveCategory] = useState<MenuCategory>(MenuCategory.ALL);
 
   const filteredItems = useMemo(() => {
@@ -15,8 +15,21 @@ const Menu: React.FC = () => {
 
   const handleWhatsAppOrder = (itemName: string, price: number) => {
     const phoneNumber = "27658456336";
-    const message = encodeURIComponent(`Hello Elengi Ya Malewa, I would like to order the ${itemName} for R${price}.`);
+    const msgTemplate = language === 'fr' 
+      ? `Bonjour Elengi Ya Malewa, j'aimerais commander le plat ${t(itemName)} pour R${price}.` 
+      : `Hello Elengi Ya Malewa, I would like to order the ${t(itemName)} for R${price}.`;
+    const message = encodeURIComponent(msgTemplate);
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
+
+  const getCategoryLabel = (cat: string) => {
+    switch(cat) {
+      case 'All': return t('cat_all');
+      case 'Breakfast': return t('cat_breakfast');
+      case 'Main': return t('cat_main');
+      case 'Desserts': return t('cat_desserts');
+      default: return cat;
+    }
   };
 
   return (
@@ -24,8 +37,8 @@ const Menu: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white font-jakarta">Curated Delicacies</h2>
-            <p className="text-zinc-400 max-w-sm text-lg">Hand-picked ingredients prepared with passion and Congolese technical precision.</p>
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white font-jakarta">{t('curated')}</h2>
+            <p className="text-zinc-400 max-w-sm text-lg">{t('handPicked')}</p>
           </div>
           
           <div className="flex flex-wrap items-center gap-2 bg-zinc-900 border border-zinc-800 p-1.5 rounded-2xl shadow-inner">
@@ -39,7 +52,7 @@ const Menu: React.FC = () => {
                     : 'text-zinc-500 hover:text-zinc-200'
                 }`}
               >
-                {cat}
+                {getCategoryLabel(cat)}
               </button>
             ))}
           </div>
@@ -55,16 +68,16 @@ const Menu: React.FC = () => {
               <div className="aspect-[4/3] overflow-hidden">
                 <img 
                   src={item.image} 
-                  alt={item.name} 
+                  alt={t(item.name)} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
               </div>
               <div className="p-8 flex flex-col flex-grow">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-white font-jakarta">{item.name}</h3>
+                  <h3 className="text-xl font-bold text-white font-jakarta">{t(item.name)}</h3>
                   <span className="font-bold text-lg" style={{ color: config.design.primaryColor }}>R{item.price}</span>
                 </div>
-                <p className="text-sm text-zinc-500 mb-6 leading-relaxed flex-grow">{item.description}</p>
+                <p className="text-sm text-zinc-500 mb-6 leading-relaxed flex-grow">{t(item.description)}</p>
                 <div className="flex items-center justify-between mt-auto">
                   <div className="flex gap-4">
                     {item.spicy && (
@@ -92,7 +105,7 @@ const Menu: React.FC = () => {
                     style={{ backgroundColor: '#25D366' }}
                   >
                     <MessageCircle size={18} />
-                    Order Now
+                    {t('orderNow')}
                   </button>
                 </div>
               </div>

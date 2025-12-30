@@ -1,4 +1,6 @@
 
+export type Language = 'en' | 'fr';
+
 export enum MenuCategory {
   ALL = 'All',
   BREAKFAST = 'Breakfast',
