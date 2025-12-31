@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { useSite } from '../SiteContext.tsx';
-import { History, Target, Sparkles, BookOpen, Quote } from 'lucide-react';
+import { History, Target, Sparkles, BookOpen, Quote, Shield } from 'lucide-react';
 
 const AboutUs: React.FC = () => {
   const { t, config } = useSite();
 
   const iconMap: Record<string, any> = {
     '0': <History size={28} />,
-    '1': <Target size={28} />,
+    '1': <Shield size={28} />,
     '2': <Sparkles size={28} />,
     'default': <BookOpen size={28} />
   };
@@ -40,7 +40,7 @@ const AboutUs: React.FC = () => {
               className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-10 md:gap-16 lg:gap-32`}
             >
               <div className="w-full lg:flex-1 space-y-6 md:space-y-8 text-center lg:text-left">
-                <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-[1.5rem] md:rounded-[2rem] bg-orange-600/10 text-orange-500 shadow-xl shadow-orange-950/20 mx-auto lg:mx-0">
+                <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-[1.5rem] md:rounded-[2.5rem] bg-orange-600/10 text-orange-500 shadow-xl shadow-orange-950/20 mx-auto lg:mx-0">
                   {iconMap[idx.toString()] || iconMap['default']}
                 </div>
                 <div className="space-y-4 md:space-y-6">

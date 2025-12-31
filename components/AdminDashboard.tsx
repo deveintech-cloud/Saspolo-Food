@@ -5,7 +5,7 @@ import {
   Eye, EyeOff, ArrowUp, ArrowDown, Undo2, Menu as MenuIcon, Palette, Newspaper, 
   Link as LinkIcon, X, PlusCircle, Upload, Info, BarChart3, Share2, Type, Square,
   CircleDot, Layers, Quote as QuoteIcon, Activity, CheckCircle2, AlertTriangle, RefreshCcw,
-  Flame, Leaf, Wheat, Copy, ChevronDown, Sparkles
+  Flame, Leaf, Wheat, Copy, ChevronDown, Sparkles, Utensils
 } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 import { MenuCategory, MenuItem, Post, NavItem, SiteConfig } from '../types.ts';
@@ -65,23 +65,28 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const addNewProduct = (category: MenuCategory) => {
-    const newItemId = Date.now().toString();
+    const newItemId = "item_" + Date.now();
     const newItem: MenuItem = {
       id: newItemId,
-      name: `New ${category} Creation`,
-      description: 'Describe the flavors and soul of this dish...',
+      name: `New ${category} Specialty`,
+      description: 'Handcrafted with ancestral knowledge...',
       category: category,
       image: 'https://images.unsplash.com/photo-1544025162-d76694265947',
-      tags: [],
+      tags: ['New Arrival'],
       nutrition: { calories: '0 kcal', protein: '0g', fat: '0g', carbs: '0g' }
     };
-    updateMenuItems([...menuItems, newItem]);
+    
+    // Explicitly create new array to ensure state update detection
+    const updatedList = [...menuItems, newItem];
+    updateMenuItems(updatedList);
+    
+    // Auto-open for editing
     setEditingMenuItemId(newItemId);
     setShowAddMenu(false);
   };
 
   const duplicateProduct = (item: MenuItem) => {
-    const newItemId = Date.now().toString();
+    const newItemId = "item_copy_" + Date.now();
     const duplicatedItem = { ...item, id: newItemId, name: `${item.name} (Copy)` };
     updateMenuItems([...menuItems, duplicatedItem]);
     setEditingMenuItemId(newItemId);
@@ -105,7 +110,7 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       }`}>
         <div className="p-8 border-b border-white/5 hidden md:block">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-[9px] font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">System Core v2.5</span>
+            <span className="text-[9px] font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">System Core v2.6</span>
             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-all text-zinc-500 hover:text-white active:scale-90">
               <Undo2 size={16} />
             </button>
@@ -179,43 +184,46 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                  <SectionHeader title="Product Catalog" subtitle="Dishes & Curated Selection" />
                  
-                 {/* Improved Add Button with Options */}
+                 {/* Fixed & Improved Add Button with Options */}
                  <div className="relative" ref={addMenuRef}>
                     <button 
                       onClick={() => setShowAddMenu(!showAddMenu)}
                       className="flex items-center gap-3 px-6 py-3 bg-orange-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-orange-950/20 hover:translate-y-[-1px] hover:bg-orange-500 transition-all active:scale-95 group"
                     >
-                      <Plus size={14} className={`transition-transform duration-300 ${showAddMenu ? 'rotate-45' : ''}`} />
+                      <PlusCircle size={14} className={`transition-transform duration-300 ${showAddMenu ? 'rotate-45' : ''}`} />
                       Add New Product
                       <ChevronDown size={14} className={`ml-2 transition-transform ${showAddMenu ? 'rotate-180' : ''}`} />
                     </button>
                     
                     {showAddMenu && (
-                      <div className="absolute right-0 top-full mt-3 w-56 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl z-[60] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="absolute right-0 top-full mt-3 w-64 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl z-[60] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                         <div className="p-3 border-b border-white/5 bg-zinc-950/50">
-                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500">Choose Category</span>
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500">Categorical Creation</span>
                         </div>
-                        <button onClick={() => addNewProduct(MenuCategory.BREAKFAST)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
-                          <PlusCircle size={14} className="text-orange-500" /> Breakfast Option
+                        <button onClick={() => addNewProduct(MenuCategory.BREAKFAST)} className="w-full flex items-center justify-between px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <div className="flex items-center gap-3"><Sparkles size={14} className="text-orange-500" /> Breakfast</div>
+                          <ChevronRight size={12} className="opacity-30" />
                         </button>
-                        <button onClick={() => addNewProduct(MenuCategory.MAIN)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
-                          <PlusCircle size={14} className="text-orange-500" /> Main Entree
+                        <button onClick={() => addNewProduct(MenuCategory.MAIN)} className="w-full flex items-center justify-between px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <div className="flex items-center gap-3"><Utensils size={14} className="text-orange-500" /> Main Entrée</div>
+                          <ChevronRight size={12} className="opacity-30" />
                         </button>
-                        <button onClick={() => addNewProduct(MenuCategory.DESSERTS)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
-                          <PlusCircle size={14} className="text-orange-500" /> Sweet Finale
+                        <button onClick={() => addNewProduct(MenuCategory.DESSERTS)} className="w-full flex items-center justify-between px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <div className="flex items-center gap-3"><Flame size={14} className="text-orange-500" /> Sweet Finale</div>
+                          <ChevronRight size={12} className="opacity-30" />
                         </button>
-                        <div className="p-3 bg-zinc-950/30 border-t border-white/5">
-                           <button className="flex items-center gap-2 text-[8px] font-black text-orange-500/60 uppercase italic tracking-widest">
-                             <Sparkles size={10} /> AI Generation Coming Soon
-                           </button>
-                        </div>
                       </div>
                     )}
                  </div>
                </div>
 
                <div className="grid gap-8">
-                 {menuItems.map(item => (
+                 {menuItems.length === 0 ? (
+                   <div className="p-12 border-2 border-dashed border-white/5 rounded-[2rem] text-center space-y-4">
+                     <Plus className="mx-auto text-zinc-800" size={48} />
+                     <p className="text-zinc-600 font-medium">No products found. Start by adding one above.</p>
+                   </div>
+                 ) : menuItems.map(item => (
                    <div key={item.id} className={`p-6 md:p-8 bg-zinc-900 border transition-all duration-300 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col gap-8 group shadow-lg ${editingMenuItemId === item.id ? 'border-orange-500/50 ring-1 ring-orange-500/20' : 'border-white/5'}`}>
                       <div className="flex flex-col md:flex-row gap-8 w-full">
                         {/* Image Upload Area */}

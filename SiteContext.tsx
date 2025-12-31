@@ -65,9 +65,11 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     about_quote: "Gastronomy is the only art form that enters the soul through all senses. At Elengi, we honor the vibration of our land.",
     about_chef_role: "Culinary Visionary",
     about_sec1_title: "The Genesis",
-    about_sec1_text: "Born in the electric streets of Kinshasa and refined in the cosmopolitan pulse of Johannesburg, Elengi is the bridge between traditional street Malewas and high-performance gastronomy.",
+    about_sec1_text: "Born in the electric streets of Kinshasa and refined in the cosmopolitan pulse of Johannesburg, Elengi is the bridge between traditional street Malewas and high-performance gastronomy. We honor the 'Malewa' spirit—unpretentious, soulful, and deeply community-oriented—while elevating it with contemporary techniques.",
     about_sec2_title: "The Ethos",
-    about_sec2_text: "Our mission is to decolonize the fine dining experience, proving that Congolese flavors are as sophisticated, complex, and profound as any on the global stage.",
+    about_sec2_text: "Our mission is to decolonize the fine dining experience, proving that Congolese flavors are as sophisticated, complex, and profound as any on the global stage. We source exclusively from small-holder farmers across the Congo Basin, ensuring every bite supports the hands that tilled the soil.",
+    about_sec3_title: "The Vision",
+    about_sec3_text: "We envision a world where African culinary heritage is celebrated not as an exotic novelty, but as a pillar of global high-culture. Elengi is more than a restaurant; it is a cultural institute dedicated to the preservation of flavor.",
 
     // Roots
     roots_tag: "Our Roots",
@@ -171,9 +173,11 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     about_quote: "La gastronomie est la seule forme d'art qui pénètre l'âme par tous les sens. Chez Elengi, nous honorons la vibration de notre terre.",
     about_chef_role: "Visionnaire Culinaire",
     about_sec1_title: "La Genèse",
-    about_sec1_text: "Né dans les rues électriques de Kinshasa et affiné dans le pouls cosmopolite de Johannesburg, Elengi est le pont entre les Malewas traditionnelles et la gastronomie de haute performance.",
+    about_sec1_text: "Né dans les rues électriques de Kinshasa et affiné dans le pouls cosmopolite de Johannesburg, Elengi est le pont entre les Malewas traditionnelles et la gastronomie de haute performance. Nous honorons l'esprit 'Malewa'—simple, profond et communautaire—tout en l'élevant avec des techniques contemporaines.",
     about_sec2_title: "L'Ethos",
-    about_sec2_text: "Notre mission est de décoloniser l'expérience gastronomique, prouvant que les saveurs congolaises sont aussi sophistiquées, complexes et profondes que n'importe quelle autre sur la scène mondiale.",
+    about_sec2_text: "Notre mission est de décoloniser l'expérience gastronomique, prouvant que les saveurs congolaises sont aussi sophistiquées, complexes et profondes que n'importe quelle autre sur la scène mondiale. Nous nous approvisionnons exclusivement auprès de petits exploitants du bassin du Congo.",
+    about_sec3_title: "La Vision",
+    about_sec3_text: "Nous envisageons un monde où l'héritage culinaire africain est célébré non pas comme une nouveauté exotique, mais comme un pilier de la haute culture mondiale. Elengi est plus qu'un restaurant; c'est un institut culturel dédié à la préservation des saveurs.",
 
     // Roots
     roots_tag: "Nos Racines",
@@ -252,7 +256,8 @@ const DEFAULT_CONFIG: SiteConfig = {
     },
     sections: [
       { id: '1', title: 'about_sec1_title', text: 'about_sec1_text', image: 'https://images.unsplash.com/photo-1528605248644-14dd04cb21c7?q=80&w=1000&auto=format&fit=crop' },
-      { id: '2', title: 'about_sec2_title', text: 'about_sec2_text', image: 'https://images.unsplash.com/photo-1550966842-28c456303271?q=80&w=1000&auto=format&fit=crop' }
+      { id: '2', title: 'about_sec2_title', text: 'about_sec2_text', image: 'https://images.unsplash.com/photo-1550966842-28c456303271?q=80&w=1000&auto=format&fit=crop' },
+      { id: '3', title: 'about_sec3_title', text: 'about_sec3_text', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop' }
     ]
   },
   stats: [
