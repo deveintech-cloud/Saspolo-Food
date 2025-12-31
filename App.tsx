@@ -9,6 +9,7 @@ import Footer from './components/Footer.tsx';
 import GeminiChef from './components/GeminiChef.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import AboutUs from './components/AboutUs.tsx';
+import Heritage from './components/Heritage.tsx';
 import { SiteProvider, useSite } from './SiteContext.tsx';
 import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn, ChevronLeft, Calendar, Tag } from 'lucide-react';
 import { Post } from './types.ts';
@@ -90,27 +91,7 @@ const MainContent: React.FC = () => {
   const sectionMap: Record<string, React.ReactNode> = {
     hero: <Hero />,
     about: <AboutUs />,
-    experience: (
-      <section id="experience" className="py-24 px-6 bg-zinc-950 border-t border-white/5">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold font-jakarta mb-20">{config.experience.title}</h2>
-          <div className="grid md:grid-cols-3 gap-16">
-            {config.experience.items.map(item => {
-              const Icon = item.icon === 'Sparkles' ? Sparkles : Utensils;
-              return (
-                <div key={item.id} className="space-y-6">
-                  <div className="h-14 w-14 flex items-center justify-center mx-auto shadow-xl" style={{ backgroundColor: `${config.design.primaryColor}15`, color: config.design.primaryColor, borderRadius: `calc(${config.design.borderRadius} / 2)` }}>
-                    <Icon size={28} />
-                  </div>
-                  <h3 className="text-2xl font-bold">{item.title}</h3>
-                  <p className="text-zinc-500 text-sm leading-relaxed">{item.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-    ),
+    experience: <Heritage />,
     stats: <Stats />,
     menu: <Menu />,
     blog: (

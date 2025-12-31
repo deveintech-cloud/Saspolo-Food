@@ -4,7 +4,8 @@ import {
   Layout, Settings, FileText, ImageIcon, Search, ChevronRight, Save, Trash2, Plus, 
   Eye, EyeOff, ArrowUp, ArrowDown, Undo2, Menu as MenuIcon, Palette, Newspaper, 
   Link as LinkIcon, X, PlusCircle, Upload, Info, BarChart3, Share2, Type, Square,
-  CircleDot, Layers, Quote as QuoteIcon, Activity, CheckCircle2, AlertTriangle, RefreshCcw
+  CircleDot, Layers, Quote as QuoteIcon, Activity, CheckCircle2, AlertTriangle, RefreshCcw,
+  Flame, Leaf, Wheat
 } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 import { MenuCategory, MenuItem, Post, NavItem, SiteConfig } from '../types.ts';
@@ -20,9 +21,10 @@ const SectionHeader: React.FC<{ title: string; subtitle: string }> = ({ title, s
 const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { config, menuItems, posts, updateConfig, updateMenuItems, updatePosts, resetToDefaults } = useSite();
   const [activeTab, setActiveTab] = useState<'content' | 'about' | 'stats' | 'menu' | 'posts' | 'navigation' | 'design' | 'footer' | 'seo'>('content');
-  const [editingPostId, setEditingPostId] = useState<string | null>(null);
   const [editingMenuItemId, setEditingMenuItemId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const navItems = [
     { id: 'content', label: 'Home Page', icon: <FileText size={16} /> },
@@ -35,6 +37,20 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     { id: 'design', label: 'Theme Design', icon: <Palette size={16} /> },
     { id: 'seo', label: 'SEO Config', icon: <Search size={16} /> },
   ];
+
+  const handleImageUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        updateMenuItems(menuItems.map(item => 
+          item.id === id ? { ...item, image: base64String } : item
+        ));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const moveAboutSection = (idx: number, direction: 'up' | 'down') => {
     const newSections = [...config.about.sections];
@@ -148,39 +164,145 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                    Add New Product
                  </button>
                </div>
-               <div className="grid gap-6">
+               <div className="grid gap-8">
                  {menuItems.map(item => (
-                   <div key={item.id} className="p-6 md:p-8 bg-zinc-900 border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col md:row gap-6 md:gap-8 group shadow-lg">
+                   <div key={item.id} className={`p-6 md:p-8 bg-zinc-900 border transition-all duration-300 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col gap-8 group shadow-lg ${editingMenuItemId === item.id ? 'border-orange-500/50 ring-1 ring-orange-500/20' : 'border-white/5'}`}>
                       <div className="flex flex-col md:flex-row gap-8 w-full">
-                        <div className="w-full md:w-32 h-48 md:h-32 relative shrink-0">
-                           <img src={item.image} className="w-full h-full object-cover rounded-2xl md:rounded-3xl border border-white/10" />
+                        {/* Image Upload Area */}
+                        <div className="w-full md:w-48 h-48 relative shrink-0">
+                           <input 
+                             type="file" 
+                             className="hidden" 
+                             accept="image/*"
+                             id={`upload-${item.id}`}
+                             onChange={(e) => handleImageUpload(item.id, e)}
+                           />
+                           <label 
+                             htmlFor={`upload-${item.id}`}
+                             className="block w-full h-full cursor-pointer relative overflow-hidden rounded-2xl md:rounded-3xl group/img"
+                           >
+                             <img src={item.image} className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-110" />
+                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                                <Upload size={24} className="text-white" />
+                                <span className="text-[10px] font-bold text-white uppercase tracking-widest">Change Image</span>
+                             </div>
+                           </label>
                         </div>
-                        <div className="flex-grow space-y-4">
+
+                        <div className="flex-grow space-y-6">
                           <div className="flex justify-between items-start">
-                            <input className="bg-transparent border-b border-white/10 text-lg md:text-xl font-bold w-full mr-4 text-white focus:border-orange-500 outline-none transition-colors" value={item.name} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, name: e.target.value } : i))} />
-                            <div className="flex gap-2 shrink-0">
+                            <div className="flex-grow mr-4 space-y-4">
+                              <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Dish Name</label>
+                                <input className="bg-zinc-950 border border-white/5 rounded-xl text-lg md:text-xl font-bold w-full px-4 py-2 text-white focus:border-orange-500 outline-none transition-colors" value={item.name} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, name: e.target.value } : i))} />
+                              </div>
+                            </div>
+                            <div className="flex gap-2 shrink-0 pt-6">
                                <button 
                                 onClick={() => setEditingMenuItemId(editingMenuItemId === item.id ? null : item.id)} 
-                                className={`p-2 rounded-xl transition-all active:scale-90 ${editingMenuItemId === item.id ? 'bg-orange-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+                                className={`p-2.5 rounded-xl transition-all active:scale-90 ${editingMenuItemId === item.id ? 'bg-orange-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+                                title="Edit Nutrition & Flags"
                                >
-                                 <Settings size={16}/>
+                                 <Settings size={18}/>
                                </button>
                                <button 
                                 onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} 
-                                className="p-2 bg-rose-500/10 text-rose-500 hover:bg-rose-600 hover:text-white rounded-xl transition-all active:scale-90"
+                                className="p-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-600 hover:text-white rounded-xl transition-all active:scale-90"
                                >
-                                 <Trash2 size={16}/>
+                                 <Trash2 size={18}/>
                                </button>
                             </div>
                           </div>
-                          <textarea className="w-full bg-zinc-950/50 border border-white/5 rounded-xl p-3 text-xs text-zinc-400 focus:text-white transition-colors outline-none" rows={2} value={item.description} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, description: e.target.value } : i))} />
-                          <div className="flex flex-wrap items-center gap-4">
-                             <select className="bg-zinc-950 border border-white/5 rounded-xl px-4 py-1.5 text-[10px] uppercase font-bold text-zinc-400 hover:text-white transition-colors cursor-pointer outline-none" value={item.category} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, category: e.target.value as MenuCategory } : i))}>
-                                {Object.values(MenuCategory).map(c => <option key={c} value={c}>{c}</option>)}
-                             </select>
+
+                          <div className="space-y-1">
+                            <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Description</label>
+                            <textarea className="w-full bg-zinc-950 border border-white/5 rounded-xl p-4 text-xs text-zinc-400 focus:text-white transition-colors outline-none resize-none" rows={2} value={item.description} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, description: e.target.value } : i))} />
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-6">
+                             <div className="space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Category</label>
+                                <select className="bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-[10px] uppercase font-bold text-zinc-400 hover:text-white transition-colors cursor-pointer outline-none block" value={item.category} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, category: e.target.value as MenuCategory } : i))}>
+                                  {Object.values(MenuCategory).map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                             </div>
+                             
+                             <div className="flex-grow space-y-1">
+                                <label className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest ml-1">Tags (Comma separated)</label>
+                                <input className="w-full bg-zinc-950 border border-white/5 rounded-xl px-4 py-2 text-[10px] font-bold text-zinc-400 focus:text-orange-500 outline-none transition-colors" value={item.tags.join(', ')} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, tags: e.target.value.split(',').map(t => t.trim()) } : i))} placeholder="Vegan, Spicy, Popular..." />
+                             </div>
                           </div>
                         </div>
                       </div>
+
+                      {/* Advanced Editor (Nutrition & Flags) */}
+                      {editingMenuItemId === item.id && (
+                        <div className="pt-8 border-t border-white/5 grid md:grid-cols-2 gap-12 animate-in fade-in slide-in-from-top-4 duration-300">
+                           <div className="space-y-6">
+                              <h4 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                                <Activity size={14} />
+                                Nutrition Profile
+                              </h4>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Calories</label>
+                                  <input className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-[10px] font-bold text-white outline-none" value={item.nutrition?.calories || ''} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...(i.nutrition || {}), calories: e.target.value } } : i))} placeholder="e.g. 450 kcal" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Protein</label>
+                                  <input className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-[10px] font-bold text-white outline-none" value={item.nutrition?.protein || ''} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...(i.nutrition || {}), protein: e.target.value } } : i))} placeholder="e.g. 25g" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Fats</label>
+                                  <input className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-[10px] font-bold text-white outline-none" value={item.nutrition?.fat || ''} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...(i.nutrition || {}), fat: e.target.value } } : i))} placeholder="e.g. 15g" />
+                                </div>
+                                <div className="space-y-1">
+                                  <label className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Carbs</label>
+                                  <input className="w-full bg-zinc-950 border border-white/5 rounded-lg px-3 py-2 text-[10px] font-bold text-white outline-none" value={item.nutrition?.carbs || ''} onChange={e => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, nutrition: { ...(i.nutrition || {}), carbs: e.target.value } } : i))} placeholder="e.g. 60g" />
+                                </div>
+                              </div>
+                           </div>
+
+                           <div className="space-y-6">
+                              <h4 className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                                <Layers size={14} />
+                                Product Flags
+                              </h4>
+                              <div className="grid grid-cols-1 gap-3">
+                                <button 
+                                  onClick={() => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, spicy: !i.spicy } : i))}
+                                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${item.spicy ? 'bg-orange-500/10 border-orange-500/40 text-orange-500' : 'bg-zinc-950 border-white/5 text-zinc-500'}`}
+                                >
+                                  <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <Flame size={14} />
+                                    Spicy Level
+                                  </span>
+                                  <span className="text-[8px] font-black uppercase">{item.spicy ? 'Enabled' : 'Disabled'}</span>
+                                </button>
+                                <button 
+                                  onClick={() => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, healthy: !i.healthy } : i))}
+                                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${item.healthy ? 'bg-green-500/10 border-green-500/40 text-green-500' : 'bg-zinc-950 border-white/5 text-zinc-500'}`}
+                                >
+                                  <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <Leaf size={14} />
+                                    Healthy/Green
+                                  </span>
+                                  <span className="text-[8px] font-black uppercase">{item.healthy ? 'Enabled' : 'Disabled'}</span>
+                                </button>
+                                <button 
+                                  onClick={() => updateMenuItems(menuItems.map(i => i.id === item.id ? { ...i, glutenFree: !i.glutenFree } : i))}
+                                  className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${item.glutenFree ? 'bg-yellow-500/10 border-yellow-500/40 text-yellow-500' : 'bg-zinc-950 border-white/5 text-zinc-500'}`}
+                                >
+                                  <span className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                                    <Wheat size={14} />
+                                    Gluten Free
+                                  </span>
+                                  <span className="text-[8px] font-black uppercase">{item.glutenFree ? 'Enabled' : 'Disabled'}</span>
+                                </button>
+                              </div>
+                           </div>
+                        </div>
+                      )}
                    </div>
                  ))}
                </div>
@@ -221,7 +343,7 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                            <div className="flex justify-between items-start">
                              <input className="bg-transparent border-b border-white/10 text-lg font-bold w-full mr-4 text-white focus:border-orange-500 outline-none" value={post.title} onChange={e => updatePosts(posts.map(p => p.id === post.id ? { ...p, title: e.target.value } : p))} />
                              <div className="flex gap-2">
-                               <button onClick={() => setEditingPostId(editingPostId === post.id ? null : post.id)} className={`p-2 rounded-lg transition-all ${editingPostId === post.id ? 'bg-orange-600 text-white' : 'bg-zinc-800 text-zinc-500'}`}><Settings size={16} /></button>
+                               <button className={`p-2 rounded-lg transition-all bg-zinc-800 text-zinc-500`}><Settings size={16} /></button>
                                <button onClick={() => updatePosts(posts.filter(p => p.id !== post.id))} className="p-2 bg-rose-500/10 text-rose-500 rounded-lg"><Trash2 size={16} /></button>
                              </div>
                            </div>
