@@ -10,6 +10,7 @@ import GeminiChef from './components/GeminiChef.tsx';
 import AdminDashboard from './components/AdminDashboard.tsx';
 import AboutUs from './components/AboutUs.tsx';
 import Heritage from './components/Heritage.tsx';
+import Roots from './components/Roots.tsx';
 import { SiteProvider, useSite } from './SiteContext.tsx';
 import { Sparkles, Camera, Utensils, Settings, ArrowRight, Lock, X, LogIn, ChevronLeft, Calendar, Tag } from 'lucide-react';
 import { Post } from './types.ts';
@@ -91,6 +92,7 @@ const MainContent: React.FC = () => {
   const sectionMap: Record<string, React.ReactNode> = {
     hero: <Hero />,
     about: <AboutUs />,
+    roots: <Roots />,
     experience: <Heritage />,
     stats: <Stats />,
     menu: <Menu />,

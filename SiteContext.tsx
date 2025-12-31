@@ -222,11 +222,12 @@ const DEFAULT_CONFIG: SiteConfig = {
   sections: [
     { id: 'hero', name: 'Hero', visible: true, order: 0 },
     { id: 'about', name: 'About Us', visible: true, order: 1 },
-    { id: 'experience', name: 'Experience', visible: true, order: 2 },
-    { id: 'stats', name: 'Statistics', visible: true, order: 3 },
-    { id: 'menu', name: 'Menu', visible: true, order: 4 },
-    { id: 'blog', name: 'Latest News', visible: true, order: 5 },
-    { id: 'reserve', name: 'Reservations', visible: true, order: 6 }
+    { id: 'roots', name: 'Our Roots', visible: true, order: 2 },
+    { id: 'experience', name: 'Experience', visible: true, order: 3 },
+    { id: 'stats', name: 'Statistics', visible: true, order: 4 },
+    { id: 'menu', name: 'Menu', visible: true, order: 5 },
+    { id: 'blog', name: 'Latest News', visible: true, order: 6 },
+    { id: 'reserve', name: 'Reservations', visible: true, order: 7 }
   ],
   navigation: [
     { id: 'n1', label: 'cuisine', target: 'menu' },
@@ -254,13 +255,13 @@ const SiteContext = createContext<SiteContextType | undefined>(undefined);
 
 export const SiteProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>(() => localStorage.getItem('saspolo_lang') as Language || 'en');
-  const [config, setConfig] = useState<SiteConfig>(() => JSON.parse(localStorage.getItem('saspolo_config_v10') || JSON.stringify(DEFAULT_CONFIG)));
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => JSON.parse(localStorage.getItem('saspolo_menu_v10') || JSON.stringify(INITIAL_MENU)));
-  const [posts, setPosts] = useState<Post[]>(() => JSON.parse(localStorage.getItem('saspolo_posts_v10') || JSON.stringify(DEFAULT_POSTS)));
+  const [config, setConfig] = useState<SiteConfig>(() => JSON.parse(localStorage.getItem('saspolo_config_v11') || JSON.stringify(DEFAULT_CONFIG)));
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => JSON.parse(localStorage.getItem('saspolo_menu_v11') || JSON.stringify(INITIAL_MENU)));
+  const [posts, setPosts] = useState<Post[]>(() => JSON.parse(localStorage.getItem('saspolo_posts_v11') || JSON.stringify(DEFAULT_POSTS)));
 
-  useEffect(() => localStorage.setItem('saspolo_config_v10', JSON.stringify(config)), [config]);
-  useEffect(() => localStorage.setItem('saspolo_menu_v10', JSON.stringify(menuItems)), [menuItems]);
-  useEffect(() => localStorage.setItem('saspolo_posts_v10', JSON.stringify(posts)), [posts]);
+  useEffect(() => localStorage.setItem('saspolo_config_v11', JSON.stringify(config)), [config]);
+  useEffect(() => localStorage.setItem('saspolo_menu_v11', JSON.stringify(menuItems)), [menuItems]);
+  useEffect(() => localStorage.setItem('saspolo_posts_v11', JSON.stringify(posts)), [posts]);
   useEffect(() => localStorage.setItem('saspolo_lang', language), [language]);
 
   const t = (key: string) => TRANSLATIONS[language][key] || key;
