@@ -37,7 +37,8 @@ const GeminiChef: React.FC = () => {
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setIsLoading(true);
 
-    const menuContext = MENU_ITEMS.map(i => `${i.name}: ${i.description} (R${i.price})`).join('\n');
+    // Fixed: Removed i.price which does not exist on MenuItem type
+    const menuContext = MENU_ITEMS.map(i => `${i.name}: ${i.description}`).join('\n');
     const response = await getGeminiResponse(userMsg, menuContext);
     
     setMessages(prev => [...prev, { role: 'model', text: response }]);
@@ -45,25 +46,25 @@ const GeminiChef: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[60]">
+    <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[60]">
       {isOpen ? (
-        <div className="w-80 md:w-96 h-[500px] bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300">
-          <div className="p-4 bg-zinc-800/50 border-b border-zinc-700 flex items-center justify-between">
+        <div className="fixed inset-x-4 bottom-6 md:inset-auto md:relative w-auto md:w-96 h-[500px] md:h-[600px] bg-zinc-900 border border-zinc-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <div className="p-4 bg-zinc-800/80 backdrop-blur-md border-b border-zinc-700 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-orange-600 flex items-center justify-center shadow-lg">
                 <Bot size={20} className="text-white" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Elengi Ya Malewa Sommelier</p>
-                <p className="text-[10px] text-orange-400 font-bold uppercase tracking-widest">AI Expert</p>
+                <p className="text-sm font-bold text-white">Elengi Sommelier</p>
+                <p className="text-[10px] text-orange-400 font-bold uppercase tracking-widest">AI Concierge</p>
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+            <button onClick={() => setIsOpen(false)} className="text-zinc-500 hover:text-white transition-colors p-2">
               <X size={20} />
             </button>
           </div>
 
-          <div className="flex-grow overflow-y-auto p-4 space-y-4 scroll-smooth">
+          <div className="flex-grow overflow-y-auto p-4 space-y-4 scroll-smooth bg-zinc-900/50">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed ${
@@ -79,15 +80,15 @@ const GeminiChef: React.FC = () => {
               <div className="flex justify-start">
                 <div className="bg-zinc-800 p-3 rounded-2xl flex gap-1">
                   <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce"></div>
-                  <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce delay-150"></div>
-                  <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce delay-300"></div>
+                  <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                  <div className="w-1.5 h-1.5 bg-zinc-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
                 </div>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t border-zinc-800 bg-zinc-950/30">
+          <div className="p-4 border-t border-zinc-800 bg-zinc-950/50">
             <div className="relative">
               <input
                 type="text"
@@ -110,13 +111,13 @@ const GeminiChef: React.FC = () => {
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="h-16 w-16 bg-white text-zinc-950 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group relative"
+          className="h-14 w-14 md:h-16 md:w-16 bg-white text-zinc-950 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group relative"
         >
           <div className="absolute -top-1 -right-1 bg-orange-500 p-1 rounded-full animate-pulse border-2 border-zinc-950">
             <Sparkles size={12} className="text-white" />
           </div>
-          <MessageSquare size={28} />
-          <div className="absolute right-full mr-4 bg-zinc-900 border border-zinc-800 text-white text-xs py-2 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold shadow-xl">
+          <MessageSquare size={24} className="md:size-[28px]" />
+          <div className="hidden lg:block absolute right-full mr-4 bg-zinc-900 border border-zinc-800 text-white text-[10px] py-2 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-bold shadow-xl uppercase tracking-widest">
             {language === 'fr' ? 'Parlez à notre Sommelier' : 'Ask our Sommelier'}
           </div>
         </button>

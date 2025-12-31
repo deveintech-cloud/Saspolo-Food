@@ -5,7 +5,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '1',
     name: 'Poulet à la Moambé Heritage',
-    price: 185,
     description: 'moambe_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=1000&auto=format&fit=crop',
@@ -14,9 +13,18 @@ export const MENU_ITEMS: MenuItem[] = [
     nutrition: { calories: '840 kcal', protein: '42g', fat: '58g', carbs: '28g' }
   },
   {
+    id: '13',
+    name: 'Fumbwa aux Poissons Salés',
+    description: 'fumbwa_desc',
+    category: MenuCategory.MAIN,
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop', // High quality leaf/spinach authentic style
+    tags: ['Signature', 'Superfood', 'Kongo Central'],
+    healthy: true,
+    nutrition: { calories: '410 kcal', protein: '28g', fat: '18g', carbs: '12g' }
+  },
+  {
     id: '2',
     name: 'Liboke ya Mpunda',
-    price: 210,
     description: 'liboke_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1000&auto=format&fit=crop',
@@ -27,7 +35,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '3',
     name: 'Kamundele (Beef Skewers)',
-    price: 145,
     description: 'kamundele_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000&auto=format&fit=crop',
@@ -39,7 +46,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '4',
     name: 'Authentic Pondu & Fufu',
-    price: 125,
     description: 'pondu_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1000&auto=format&fit=crop',
@@ -50,7 +56,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '5',
     name: 'Mikate & Peanut Butter',
-    price: 65,
     description: 'mikate_desc',
     category: MenuCategory.BREAKFAST,
     image: 'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&w=1000&auto=format&fit=crop',
@@ -60,7 +65,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '6',
     name: 'Grilled Ntaba Plate',
-    price: 195,
     description: 'ntaba_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?q=80&w=1000&auto=format&fit=crop',
@@ -71,7 +75,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '7',
     name: 'Fried Makemba (Plantains)',
-    price: 55,
     description: 'makemba_desc',
     category: MenuCategory.DESSERTS,
     image: 'https://images.unsplash.com/photo-1626202133282-f8502c99516e?q=80&w=1000&auto=format&fit=crop',
@@ -81,7 +84,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '8',
     name: 'Chikwangue Heritage',
-    price: 45,
     description: 'chikwangue_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1589113103503-49ef83d95ecd?q=80&w=1000&auto=format&fit=crop',
@@ -92,7 +94,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '9',
     name: 'Madesu ya Nyama',
-    price: 135,
     description: 'madesu_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1594911773659-35c7244302d3?q=80&w=1000&auto=format&fit=crop',
@@ -103,7 +104,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '10',
     name: 'Soso ya Kotika',
-    price: 175,
     description: 'soso_kotika_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1626700051175-656a433b112a?q=80&w=1000&auto=format&fit=crop',
@@ -114,7 +114,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '11',
     name: 'Makayabu with Onions',
-    price: 155,
     description: 'makayabu_desc',
     category: MenuCategory.MAIN,
     image: 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?q=80&w=1000&auto=format&fit=crop',
@@ -125,7 +124,6 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: '12',
     name: 'Mikate Pili-Pili Combo',
-    price: 75,
     description: 'mikate_pili_desc',
     category: MenuCategory.BREAKFAST,
     image: 'https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?q=80&w=1000&auto=format&fit=crop',

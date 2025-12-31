@@ -11,7 +11,6 @@ export enum MenuCategory {
 export interface MenuItem {
   id: string;
   name: string;
-  price: number;
   description: string;
   category: MenuCategory;
   image: string;

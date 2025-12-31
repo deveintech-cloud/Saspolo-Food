@@ -59,6 +59,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "Soso ya Kotika": "Soso ya Kotika",
     "Makayabu with Onions": "Makayabu with Onions",
     "Mikate Pili-Pili Combo": "Mikate Pili-Pili Combo",
+    "Fumbwa aux Poissons Salés": "Fumbwa with Salted Fish",
     // Dish Descriptions
     moambe_desc: "The soul of the Congo. Succulent chicken slow-braised in a rich, velvety palm nut cream, enriched with local spices. Served with a side of white rice and fresh batonnets de manioc.",
     liboke_desc: "Fresh tilapia fillets marinated in 'Pili-Pili' peppers, lemon, and wild herbs, wrapped in authentic banana leaves and steamed over charcoal.",
@@ -71,7 +72,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     madesu_desc: "White beans slow-cooked in a rich tomato and onion base with tender pieces of beef and a hint of Congolese nutmeg.",
     soso_kotika_desc: "Traditional Congolese grilled chicken, marinated in a secret blend of wild herbs and lime, then smoked over open coals for an earthy finish.",
     makayabu_desc: "Premium salted cod (Makayabu) sautéed with plenty of onions, garlic, and fresh bell peppers. A savory delicacy with a deep maritime soul.",
-    mikate_pili_desc: "Fluffy golden fried dough balls served with our house-made 'Pili-Pili' volcanic hot sauce. A daring start to your morning."
+    mikate_pili_desc: "Fluffy golden fried dough balls served with our house-made 'Pili-Pili' volcanic hot sauce. A daring start to your morning.",
+    fumbwa_desc: "Wild Gnetum leaves shredded and simmered in a creamy peanut butter sauce with sun-dried salted fish. A nutrient-dense masterpiece of the Kongo region."
   },
   fr: {
     reserve: "Réserver une table",
@@ -128,6 +130,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "Soso ya Kotika": "Soso ya Kotika (Poulet Grillé)",
     "Makayabu with Onions": "Makayabu aux Oignons",
     "Mikate Pili-Pili Combo": "Combo Mikate & Pili-Pili",
+    "Fumbwa aux Poissons Salés": "Fumbwa aux Poissons Salés",
     // Dish Descriptions
     moambe_desc: "L'âme du Congo. Poulet succulent mijoté dans une crème de noix de palme riche et veloutée. Servi avec riz blanc et bâtonnets de manioc.",
     liboke_desc: "Filets de tilapia frais marinés au piment 'Pili-Pili', citron et herbes sauvages, enveloppés dans des feuilles de bananier et cuits à la vapeur.",
@@ -140,7 +143,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     madesu_desc: "Haricots blancs mijotés dans une base de tomate et d'oignons avec des morceaux de bœuf tendres et une touche de noix de muscade congolaise.",
     soso_kotika_desc: "Poulet grillé traditionnel congolais, mariné dans un mélange secret d'herbes sauvages et de citron vert, puis fumé au charbon de bois.",
     makayabu_desc: "Morue salée de première qualité (Makayabu) sautée avec des oignons, de l'ail et des poivrons frais. Un délice savoureux au caractère marin.",
-    mikate_pili_desc: "Boules de pâte frites dorées servies avec notre sauce piquante volcanique 'Pili-Pili' maison. Un début de matinée audacieux."
+    mikate_pili_desc: "Boules de pâte frites dorées servies avec notre sauce piquante volcanique 'Pili-Pili' maison. Un début de matinée audacieux.",
+    fumbwa_desc: "Feuilles de Gnetum sauvage émincées et mijotées dans une sauce crémeuse à l'arachide avec du poisson salé séché au soleil. Un chef-d'œuvre nutritif."
   }
 };
 

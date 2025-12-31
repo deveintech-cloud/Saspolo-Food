@@ -20,59 +20,73 @@ const Navbar: React.FC = () => {
     setIsMobileMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
     <nav className={`fixed top-0 w-full z-50 border-b transition-all duration-300 ${
       isScrolled 
-        ? 'border-white/5 bg-zinc-950/80 backdrop-blur-md h-16' 
+        ? 'border-white/5 bg-zinc-950/90 backdrop-blur-md h-16' 
         : 'border-transparent bg-transparent h-20'
     }`}>
-      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-xl font-bold tracking-tighter text-white hover:opacity-80 transition-opacity uppercase font-jakarta">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center justify-between">
+        <button 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+          className="text-lg md:text-xl font-bold tracking-tighter text-white hover:opacity-80 transition-opacity uppercase font-jakarta"
+        >
           {config.siteName}
         </button>
         
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-zinc-400">
           {config.navigation.map(nav => (
-            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="hover:text-white transition-colors capitalize">
+            <button 
+              key={nav.target} 
+              onClick={() => scrollToSection(nav.target)} 
+              className="hover:text-white transition-colors"
+            >
               {t(nav.label)}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex bg-zinc-900 border border-white/5 rounded-full p-1 mr-2">
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="hidden sm:flex bg-zinc-900 border border-white/5 rounded-full p-1 mr-2">
             <button 
               onClick={() => setLanguage('en')}
-              className={`px-2 py-1 text-[10px] font-bold rounded-full transition-all ${language === 'en' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
+              className={`px-2 py-1 text-[9px] font-bold rounded-full transition-all ${language === 'en' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
             >
               EN
             </button>
             <button 
               onClick={() => setLanguage('fr')}
-              className={`px-2 py-1 text-[10px] font-bold rounded-full transition-all ${language === 'fr' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
+              className={`px-2 py-1 text-[9px] font-bold rounded-full transition-all ${language === 'fr' ? 'bg-white text-zinc-950 shadow-lg' : 'text-zinc-500'}`}
             >
               FR
             </button>
           </div>
 
-          <button className="hidden md:flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5 transition-all">
-            <Search size={18} strokeWidth={1.5} />
-          </button>
           <button 
             onClick={() => scrollToSection('reserve')} 
-            style={{ backgroundColor: isScrolled ? 'white' : 'transparent', color: isScrolled ? 'black' : 'white', border: isScrolled ? 'none' : '1px solid rgba(255,255,255,0.2)' }}
-            className="px-5 py-2.5 rounded-full text-xs font-bold tracking-tight hover:opacity-80 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-white/5"
+            className={`px-4 md:px-6 py-2 md:py-2.5 rounded-full text-[10px] md:text-xs font-bold tracking-widest uppercase transition-all duration-300 flex items-center gap-2 shadow-lg ${
+              isScrolled ? 'bg-white text-black' : 'bg-transparent text-white border border-white/20'
+            }`}
           >
-            {t('reserve')}
-            <ArrowRight size={14} strokeWidth={2} />
+            <span className="hidden xs:inline">{t('reserve')}</span>
+            <ArrowRight size={14} strokeWidth={2.5} />
           </button>
           
           <button 
-            className="md:hidden text-zinc-400 p-2"
+            className="lg:hidden text-zinc-400 p-2 hover:text-white transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -80,28 +94,39 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-zinc-950/95 backdrop-blur-xl z-40 p-8 flex flex-col gap-8 animate-in slide-in-from-top duration-300 border-t border-white/5">
-          {config.navigation.map(nav => (
-            <button key={nav.target} onClick={() => scrollToSection(nav.target)} className="text-3xl font-bold font-jakarta text-left capitalize">
-              {t(nav.label)}
-            </button>
-          ))}
-          <div className="flex items-center gap-4 pt-4 border-t border-white/5">
-             <button onClick={() => setLanguage('en')} className={`text-sm font-bold ${language === 'en' ? 'text-orange-500' : 'text-zinc-500'}`}>English</button>
-             <span className="text-zinc-800">/</span>
-             <button onClick={() => setLanguage('fr')} className={`text-sm font-bold ${language === 'fr' ? 'text-orange-500' : 'text-zinc-500'}`}>Français</button>
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-0 bg-zinc-950 transition-all duration-500 z-40 lg:hidden ${
+        isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`} style={{ top: '64px' }}>
+        <div className="flex flex-col h-full p-8 md:p-12 overflow-y-auto">
+          <div className="space-y-6 md:space-y-8 mb-12">
+            {config.navigation.map((nav, idx) => (
+              <button 
+                key={nav.target} 
+                onClick={() => scrollToSection(nav.target)} 
+                className="text-4xl md:text-5xl font-bold font-jakarta text-left capitalize block animate-in slide-in-from-left duration-500 fill-mode-both"
+                style={{ animationDelay: `${idx * 100}ms` }}
+              >
+                {t(nav.label)}
+              </button>
+            ))}
           </div>
-          <button 
-            onClick={() => scrollToSection('reserve')} 
-            className="mt-4 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl"
-            style={{ backgroundColor: config.design.primaryColor }}
-          >
-            {t('reserve')}
-            <ArrowRight size={20} />
-          </button>
+          
+          <div className="mt-auto space-y-8 pt-8 border-t border-white/5">
+            <div className="flex items-center gap-6">
+               <button onClick={() => { setLanguage('en'); setIsMobileMenuOpen(false); }} className={`text-sm font-bold tracking-widest uppercase ${language === 'en' ? 'text-orange-500' : 'text-zinc-500'}`}>English</button>
+               <span className="text-zinc-800">/</span>
+               <button onClick={() => { setLanguage('fr'); setIsMobileMenuOpen(false); }} className={`text-sm font-bold tracking-widest uppercase ${language === 'fr' ? 'text-orange-500' : 'text-zinc-500'}`}>Français</button>
+            </div>
+            
+            <div className="flex gap-6">
+              {/* Social placeholders for mobile menu */}
+              <div className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-500"><Globe size={18} /></div>
+              <div className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-500"><Search size={18} /></div>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
