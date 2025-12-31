@@ -19,14 +19,14 @@ const AboutUs: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-16 md:mb-24 space-y-4 md:space-y-6">
           <div className="inline-block px-4 py-1.5 rounded-full border border-white/5 bg-white/5 backdrop-blur-sm text-[9px] md:text-[10px] font-bold uppercase tracking-[0.3em] text-orange-500 mb-2">
-            Our Heritage
+            {t('heritage')}
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-7xl font-bold font-jakarta text-white tracking-tight leading-tight">
-            {config.about.title || t('about')}
+            {t(config.about.title)}
           </h2>
           {config.about.subtitle && (
             <p className="max-w-2xl mx-auto text-base md:text-xl text-zinc-500 font-light leading-relaxed px-4">
-              {config.about.subtitle}
+              {t(config.about.subtitle)}
             </p>
           )}
           <div className="w-16 md:w-24 h-1 bg-orange-600 mx-auto rounded-full mt-6 md:mt-8"></div>
@@ -44,9 +44,9 @@ const AboutUs: React.FC = () => {
                   {iconMap[idx.toString()] || iconMap['default']}
                 </div>
                 <div className="space-y-4 md:space-y-6">
-                  <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold font-jakarta text-white leading-tight">{section.title}</h3>
+                  <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold font-jakarta text-white leading-tight">{t(section.title)}</h3>
                   <p className="text-zinc-400 text-sm sm:text-base md:text-xl leading-relaxed font-light">
-                    {section.text}
+                    {t(section.text)}
                   </p>
                 </div>
               </div>
@@ -57,11 +57,10 @@ const AboutUs: React.FC = () => {
                 >
                   <img 
                     src={section.image} 
-                    alt={section.title} 
+                    alt={t(section.title)} 
                     className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110"
                   />
                 </div>
-                {/* Decorative frames - Hidden on very small mobile to reduce clutter */}
                 <div 
                   className="hidden sm:block absolute -z-10 -bottom-4 -right-4 md:-bottom-8 md:-right-8 w-full h-full border border-orange-600/10 pointer-events-none transition-transform duration-700 group-hover:translate-x-2 md:group-hover:translate-x-4 group-hover:translate-y-2 md:group-hover:translate-y-4"
                   style={{ borderRadius: config.design.borderRadius }}
@@ -83,11 +82,11 @@ const AboutUs: React.FC = () => {
               
               <div className="max-w-4xl mx-auto space-y-8 md:space-y-12 relative z-10">
                 <p className="text-lg sm:text-xl md:text-4xl font-jakarta italic text-zinc-100 leading-snug">
-                  "{config.about.quote.text}"
+                  "{t(config.about.quote.text)}"
                 </p>
                 <div className="space-y-1 md:space-y-2">
                   <p className="text-xl md:text-2xl font-jakarta font-bold text-white">{config.about.quote.author}</p>
-                  <p className="text-[9px] md:text-xs font-bold uppercase tracking-[0.4em] text-orange-500">{config.about.quote.role}</p>
+                  <p className="text-[9px] md:text-xs font-bold uppercase tracking-[0.4em] text-orange-500">{t(config.about.quote.role)}</p>
                 </div>
               </div>
             </div>

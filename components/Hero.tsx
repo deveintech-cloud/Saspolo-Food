@@ -37,15 +37,15 @@ const Hero: React.FC = () => {
             <span className="text-[9px] md:text-xs font-bold text-zinc-300 tracking-[0.2em] uppercase">{t('newMenu')}</span>
           </div>
 
-          <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-8xl leading-[1.05] font-bold tracking-tight font-jakarta">
-            {config.hero.title} 
+          <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-8xl leading-[1.05] font-bold tracking-tight font-jakarta text-white">
+            {t(config.hero.title)} 
             <span className="block text-transparent bg-clip-text" style={{ backgroundImage: `linear-gradient(to right, ${config.design.primaryColor}, #f43f5e, #a855f7)` }}>
-              {config.hero.accentWord}
+              {t(config.hero.accentWord)}
             </span>
           </h1>
 
           <p className="text-base md:text-lg text-zinc-400 max-w-md mx-auto lg:mx-0 leading-relaxed font-light">
-            {config.hero.description}
+            {t(config.hero.description)}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">

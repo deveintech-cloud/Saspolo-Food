@@ -1,36 +1,30 @@
 
 import React from 'react';
 import { useSite } from '../SiteContext.tsx';
-import { Flame, Waves, Leaf, Wind, Sparkles, Utensils, Award } from 'lucide-react';
+import { Flame, Waves, Leaf, ArrowRight, Sparkles, Award } from 'lucide-react';
 
 const Heritage: React.FC = () => {
-  const { config, t, language } = useSite();
+  const { config, t } = useSite();
 
   const pillars = [
     {
-      title: language === 'fr' ? 'Le Foyer Ancestral' : 'The Ancestral Hearth',
-      tag: 'BOKOKO',
-      description: language === 'fr' 
-        ? "Au cœur de chaque 'Malewa' se trouve le feu. Nos techniques de fumage au charbon de bois et de mijotage lent en pots d'argile sont transmises de génération en génération, préservant l'âme fumée de la cuisine congolaise."
-        : "At the heart of every 'Malewa' lies the fire. Our charcoal-smoking and slow-simmering clay pot techniques are passed down through generations, preserving the smoky soul of Congolese cuisine.",
+      title: t('heritage_pillar1_title'),
+      tag: t('heritage_pillar1_tag'),
+      description: t('heritage_pillar1_desc'),
       image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2074&auto=format&fit=crop',
       icon: <Flame className="text-orange-500" size={32} />
     },
     {
-      title: language === 'fr' ? "L'Étreinte du Fleuve" : "The River's Embrace",
-      tag: 'CONGO BASIN',
-      description: language === 'fr'
-        ? "Le fleuve Congo n'est pas seulement une voie navigable ; c'est notre garde-manger. Du Liboke de Tilapia frais aux herbes sauvages cueillies sur ses rives, nous honorons le rythme de l'eau dans chaque plat."
-        : "The Congo River is not just a waterway; it is our pantry. From fresh Tilapia Liboke to wild herbs foraged from its banks, we honor the rhythm of the water in every dish we serve.",
+      title: t('heritage_pillar2_title'),
+      tag: t('heritage_pillar2_tag'),
+      description: t('heritage_pillar2_desc'),
       image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop',
       icon: <Waves className="text-blue-400" size={32} />
     },
     {
-      title: language === 'fr' ? "L'Art du Liboke" : "The Art of Liboke",
-      tag: 'TECHNIQUE',
-      description: language === 'fr'
-        ? "Envelopper les ingrédients dans des feuilles de bananier n'est pas qu'une présentation ; c'est une alchimie. La vapeur emprisonne les nutriments et infuse la viande d'un parfum terreux inimitable."
-        : "Wrapping ingredients in banana leaves isn't just presentation; it's alchemy. The steam locks in nutrients and infuses the meat with an unmistakable, earthy fragrance that defines our heritage.",
+      title: t('heritage_pillar3_title'),
+      tag: t('heritage_pillar3_tag'),
+      description: t('heritage_pillar3_desc'),
       image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=2070&auto=format&fit=crop',
       icon: <Leaf className="text-green-500" size={32} />
     }
@@ -43,19 +37,17 @@ const Heritage: React.FC = () => {
         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
           <Award size={14} className="text-orange-500" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
-            {language === 'fr' ? 'HÉRITAGE ET TRADITION' : 'HERITAGE & TRADITION'}
+            {t('heritage_tag')}
           </span>
         </div>
         <h2 className="text-4xl md:text-7xl font-bold font-jakarta tracking-tighter leading-none max-w-4xl mx-auto">
-          {language === 'fr' ? 'Une Odyssée' : 'A Culinary'}{' '}
+          {t('heritage_odyssey')}{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 italic">
-            {language === 'fr' ? 'Culinaire' : 'Odyssey'}
+            {t('heritage_culinary')}
           </span>
         </h2>
         <p className="max-w-2xl mx-auto text-zinc-500 text-lg font-light leading-relaxed">
-          {language === 'fr' 
-            ? "Découvrez les piliers qui soutiennent Elengi Ya Malewa. Plus qu'un restaurant, nous sommes les gardiens d'un héritage gastronomique millénaire."
-            : "Discover the pillars that uphold Elengi Ya Malewa. More than a restaurant, we are the custodians of a thousand-year-old gastronomic legacy."}
+          {t('heritage_main_desc')}
         </p>
       </div>
 
@@ -96,7 +88,7 @@ const Heritage: React.FC = () => {
                   <div className="flex items-center gap-6 pt-4">
                     <div className="h-px w-12 bg-zinc-800"></div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
-                      {language === 'fr' ? 'Artisanat Authentique' : 'Authentic Craftsmanship'}
+                      {t('heritage_craftsmanship')}
                     </span>
                   </div>
                 </div>
@@ -122,11 +114,11 @@ const Heritage: React.FC = () => {
       <div className="py-32 bg-zinc-900/20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-bold font-jakarta">{t('The Alchemist\'s Pantry' || 'The Pantry')}</h2>
-              <p className="text-zinc-500 max-w-md">{language === 'fr' ? 'Découvrez les ingrédients bruts qui définissent notre goût.' : 'Meet the raw ingredients that define our flavor profile.'}</p>
+            <div className="space-y-4 text-center md:text-left">
+              <h2 className="text-4xl md:text-5xl font-bold font-jakarta">{t('heritage_pantry_title')}</h2>
+              <p className="text-zinc-500 max-w-md mx-auto md:mx-0">{t('heritage_pantry_desc')}</p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-center">
               <button className="h-12 w-12 rounded-full border border-white/5 flex items-center justify-center text-zinc-500 hover:text-white transition-all"><ArrowRight size={20} className="rotate-180" /></button>
               <button className="h-12 w-12 rounded-full border border-white/5 flex items-center justify-center text-zinc-500 hover:text-white transition-all"><ArrowRight size={20} /></button>
             </div>
@@ -159,11 +151,5 @@ const Heritage: React.FC = () => {
     </section>
   );
 };
-
-const ArrowRight: React.FC<{ size?: number; className?: string }> = ({ size = 20, className = "" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M5 12h14m-7-7 7 7-7 7" />
-  </svg>
-);
 
 export default Heritage;

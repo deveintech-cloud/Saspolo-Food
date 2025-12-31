@@ -5,6 +5,7 @@ import { MENU_ITEMS as INITIAL_MENU } from './constants.tsx';
 
 const TRANSLATIONS: Record<Language, Record<string, string>> = {
   en: {
+    // Nav & General
     reserve: "Reserve Table",
     cuisine: "Cuisine",
     heritage: "Heritage",
@@ -53,14 +54,61 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     proposal: "Marriage Proposal",
     graduation: "Graduation Celebration",
     other: "Other Special Occasion",
-    // Dish Names
+    
+    // Hero
+    hero_title: "Congo",
+    hero_accent: "the Heart of Africa",
+    hero_desc: "Experience the vibrant spirit of Congolese Gastronomy. From the banks of the mighty river to your plate, a journey of spice and soul.",
+    
+    // About
+    about_subtitle: "A journey through three generations of Congolese culinary excellence and modern innovation.",
+    about_quote: "Cuisine is the only art that satisfies all senses simultaneously. In Elengi, we find the soul of our ancestors.",
+    about_chef_role: "Executive Culinary Director",
+    about_sec1_title: "Our Story",
+    about_sec1_text: "Founded in the heart of Kinshasa and reborn in Johannesburg, Elengi Ya Malewa is the culmination of three generations of culinary excellence. What started as a small family malewa has evolved into a beacon of modern African gastronomy.",
+    about_sec2_title: "Our Mission",
+    about_sec2_text: "To bridge cultures through the universal language of food, bringing the vibrant, bold, and sophisticated flavors of the Congo to the world stage with uncompromised authenticity.",
+
+    // Roots
+    roots_tag: "Our Roots",
+    roots_title_pre: "A Legacy in the Heart of",
+    roots_desc: "Congolese cuisine is a crossroads of ancient traditions and unique natural resources. From the mighty Congo River to the lush forests, every ingredient tells the story of a resilient and joyful people.",
+    roots_geo_title: "Geography",
+    roots_geo_desc: "Dishes influenced by the biodiversity of the Congo Basin, the second largest rainforest in the world.",
+    roots_inf_title: "Influence",
+    roots_inf_desc: "A unique blend of authentic local flavors and techniques inherited from colonial and trade history.",
+
+    // Heritage
+    heritage_tag: "HERITAGE & TRADITION",
+    heritage_odyssey: "A Culinary",
+    heritage_culinary: "Odyssey",
+    heritage_main_desc: "Discover the pillars that uphold Elengi Ya Malewa. More than a restaurant, we are the custodians of a thousand-year-old gastronomic legacy.",
+    heritage_pillar1_title: "The Ancestral Hearth",
+    heritage_pillar1_tag: "BOKOKO",
+    heritage_pillar1_desc: "At the heart of every 'Malewa' lies the fire. Our charcoal-smoking and slow-simmering clay pot techniques are passed down through generations, preserving the smoky soul of Congolese cuisine.",
+    heritage_pillar2_title: "The River's Embrace",
+    heritage_pillar2_tag: "CONGO BASIN",
+    heritage_pillar2_desc: "The Congo River is not just a waterway; it is our pantry. From fresh Tilapia Liboke to wild herbs foraged from its banks, we honor the rhythm of the water in every dish we serve.",
+    heritage_pillar3_title: "The Art of Liboke",
+    heritage_pillar3_tag: "TECHNIQUE",
+    heritage_pillar3_desc: "Wrapping ingredients in banana leaves isn't just presentation; it's alchemy. The steam locks in nutrients and infuses the meat with an unmistakable, earthy fragrance that defines our heritage.",
+    heritage_craftsmanship: "Authentic Craftsmanship",
+    heritage_pantry_title: "The Alchemist's Pantry",
+    heritage_pantry_desc: "Meet the raw ingredients that define our flavor profile.",
+
+    // Stats
+    stat_years_label: "Years Experience",
+    stat_customers_label: "Happy Customers",
+    stat_organic_label: "Organic Sourced",
+    stat_rating_label: "Average Rating",
+
+    // Dish Names & Descs
     "Chikwangue Heritage": "Chikwangue Heritage",
     "Madesu ya Nyama": "Madesu ya Nyama",
     "Soso ya Kotika": "Soso ya Kotika",
     "Makayabu with Onions": "Makayabu with Onions",
     "Mikate Pili-Pili Combo": "Mikate Pili-Pili Combo",
     "Fumbwa aux Poissons Salés": "Fumbwa with Salted Fish",
-    // Dish Descriptions
     moambe_desc: "The soul of the Congo. Succulent chicken slow-braised in a rich, velvety palm nut cream, enriched with local spices. Served with a side of white rice and fresh batonnets de manioc.",
     liboke_desc: "Fresh tilapia fillets marinated in 'Pili-Pili' peppers, lemon, and wild herbs, wrapped in authentic banana leaves and steamed over charcoal.",
     kamundele_desc: "Traditional market-style beef skewers, marinated in a blend of ginger, garlic, and Congolese spice mixes, charcoal-grilled to a smoky finish.",
@@ -76,6 +124,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     fumbwa_desc: "Wild Gnetum leaves shredded and simmered in a creamy peanut butter sauce with sun-dried salted fish. A nutrient-dense masterpiece of the Kongo region."
   },
   fr: {
+    // Nav & General
     reserve: "Réserver une table",
     cuisine: "Cuisine",
     heritage: "Héritage",
@@ -124,14 +173,61 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     proposal: "Demande en Mariage",
     graduation: "Célébration de Remise de Diplôme",
     other: "Autre Occasion Spéciale",
-    // Dish Names
+    
+    // Hero
+    hero_title: "Congo",
+    hero_accent: "au Cœur de l'Afrique",
+    hero_desc: "Découvrez l'esprit vibrant de la gastronomie congolaise. Des rives du fleuve majestueux à votre assiette, un voyage d'épices et d'âme.",
+    
+    // About
+    about_subtitle: "Un voyage à travers trois générations d'excellence culinaire congolaise et d'innovation moderne.",
+    about_quote: "La cuisine est le seul art qui satisfait tous les sens simultanément. Dans Elengi, nous trouvons l'âme de nos ancêtres.",
+    about_chef_role: "Directeur Culinaire Exécutif",
+    about_sec1_title: "Notre Histoire",
+    about_sec1_text: "Fondé au cœur de Kinshasa et renaissant à Johannesburg, Elengi Ya Malewa est l'aboutissement de trois générations d'excellence culinaire. Ce qui a commencé comme une petite malewa familiale est devenu un phare de la gastronomie africaine moderne.",
+    about_sec2_title: "Notre Mission",
+    about_sec2_text: "Créer des ponts entre les cultures grâce au langage universel de la nourriture, en apportant les saveurs vibrantes, audacieuses et sophistiquées du Congo sur la scène mondiale avec une authenticité sans compromis.",
+
+    // Roots
+    roots_tag: "Nos Racines",
+    roots_title_pre: "Un Héritage au Cœur du",
+    roots_desc: "La cuisine congolaise est un carrefour de traditions millénaires et de ressources naturelles uniques. Du puissant fleuve Congo aux forêts luxuriantes, chaque ingrédient raconte l'histoire d'un peuple résilient et joyeux.",
+    roots_geo_title: "Géographie",
+    roots_geo_desc: "Des plats influencés par la biodiversité du bassin du Congo, la deuxième plus grande forêt tropicale au monde.",
+    roots_inf_title: "Influence",
+    roots_inf_desc: "Un mélange unique de saveurs locales authentiques et de techniques héritées de l'histoire coloniale et commerciale.",
+
+    // Heritage
+    heritage_tag: "HÉREITAGE & TRADITION",
+    heritage_odyssey: "Une Odyssée",
+    heritage_culinary: "Culinaire",
+    heritage_main_desc: "Découvrez les piliers qui soutiennent Elengi Ya Malewa. Plus qu'un restaurant, nous sommes les gardiens d'un héritage gastronomique millénaire.",
+    heritage_pillar1_title: "Le Foyer Ancestral",
+    heritage_pillar1_tag: "BOKOKO",
+    heritage_pillar1_desc: "Au cœur de chaque 'Malewa' se trouve le feu. Nos techniques de fumage au charbon de bois et de mijotage lent en pots d'argile sont transmises de génération en génération, préservant l'âme fumée de la cuisine congolaise.",
+    heritage_pillar2_title: "Le Fleuve'Étreinte",
+    heritage_pillar2_tag: "BASSIN DU CONGO",
+    heritage_pillar2_desc: "Le fleuve Congo n'est pas seulement une voie navigable ; c'est notre garde-manger. Du Liboke de Tilapia frais aux herbes sauvages cueillies sur ses rives, nous honorons le rythme de l'eau dans chaque plat.",
+    heritage_pillar3_title: "L'Art du Liboke",
+    heritage_pillar3_tag: "TECHNIQUE",
+    heritage_pillar3_desc: "Envelopper les ingrédients dans des feuilles de bananier n'est pas qu'une présentation ; c'est une alchimie. La vapeur emprisonne les nutriments et infuse la viande d'un parfum terreux inimitable.",
+    heritage_craftsmanship: "Artisanat Authentique",
+    heritage_pantry_title: "Le Garde-manger de l'Alchimiste",
+    heritage_pantry_desc: "Découvrez les ingrédients bruts qui définissent notre goût.",
+
+    // Stats
+    stat_years_label: "Années d'Expérience",
+    stat_customers_label: "Clients Satisfaits",
+    stat_organic_label: "Source Bio",
+    stat_rating_label: "Note Moyenne",
+
+    // Dish Names & Descs
     "Chikwangue Heritage": "Chikwangue Héritage",
     "Madesu ya Nyama": "Madesu ya Nyama",
     "Soso ya Kotika": "Soso ya Kotika (Poulet Grillé)",
     "Makayabu with Onions": "Makayabu aux Oignons",
     "Mikate Pili-Pili Combo": "Combo Mikate & Pili-Pili",
     "Fumbwa aux Poissons Salés": "Fumbwa aux Poissons Salés",
-    // Dish Descriptions
     moambe_desc: "L'âme du Congo. Poulet succulent mijoté dans une crème de noix de palme riche et veloutée. Servi avec riz blanc et bâtonnets de manioc.",
     liboke_desc: "Filets de tilapia frais marinés au piment 'Pili-Pili', citron et herbes sauvages, enveloppés dans des feuilles de bananier et cuits à la vapeur.",
     kamundele_desc: "Brochettes de bœuf traditionnelles style marché, marinées dans un mélange de gingembre et d'ail, grillées au charbon de bois.",
@@ -165,31 +261,31 @@ const DEFAULT_POSTS: Post[] = [
 const DEFAULT_CONFIG: SiteConfig = {
   siteName: "ELENGI YA MALEWA",
   hero: {
-    title: "The Heart of",
-    accentWord: "Congo",
-    description: "Experience the vibrant spirit of Congolese Gastronomy. From the banks of the mighty river to your plate, a journey of spice and soul.",
-    buttonText: "See the Menu",
-    secondaryButtonText: "Book Your Table",
+    title: "hero_title",
+    accentWord: "hero_accent",
+    description: "hero_desc",
+    buttonText: "seeMenu",
+    secondaryButtonText: "bookTable",
     image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=2070&auto=format&fit=crop"
   },
   about: {
-    title: "About Us",
-    subtitle: "A journey through three generations of Congolese culinary excellence and modern innovation.",
+    title: "about",
+    subtitle: "about_subtitle",
     quote: {
-      text: "Cuisine is the only art that satisfies all senses simultaneously. In Elengi, we find the soul of our ancestors.",
+      text: "about_quote",
       author: "Chef Mukuna",
-      role: "Executive Culinary Director"
+      role: "about_chef_role"
     },
     sections: [
-      { id: '1', title: 'Our Story', text: 'Founded in the heart of Kinshasa and reborn in Johannesburg, Elengi Ya Malewa is the culmination of three generations of culinary excellence. What started as a small family malewa has evolved into a beacon of modern African gastronomy.', image: 'https://images.unsplash.com/photo-1528605248644-14dd04cb21c7?q=80&w=1000&auto=format&fit=crop' },
-      { id: '2', title: 'Our Mission', text: 'To bridge cultures through the universal language of food, bringing the vibrant, bold, and sophisticated flavors of the Congo to the world stage with uncompromised authenticity.', image: 'https://images.unsplash.com/photo-1550966842-28c456303271?q=80&w=1000&auto=format&fit=crop' }
+      { id: '1', title: 'about_sec1_title', text: 'about_sec1_text', image: 'https://images.unsplash.com/photo-1528605248644-14dd04cb21c7?q=80&w=1000&auto=format&fit=crop' },
+      { id: '2', title: 'about_sec2_title', text: 'about_sec2_text', image: 'https://images.unsplash.com/photo-1550966842-28c456303271?q=80&w=1000&auto=format&fit=crop' }
     ]
   },
   stats: [
-    { id: '1', label: 'Years Experience', value: '15+' },
-    { id: '2', label: 'Happy Customers', value: '24k' },
-    { id: '3', label: 'Organic Sourced', value: '100%' },
-    { id: '4', label: 'Average Rating', value: '4.9' }
+    { id: '1', label: 'stat_years_label', value: '15+' },
+    { id: '2', label: 'stat_customers_label', value: '24k' },
+    { id: '3', label: 'stat_organic_label', value: '100%' },
+    { id: '4', label: 'stat_rating_label', value: '4.9' }
   ],
   footer: {
     whatsapp: "+27 65 845 6336",

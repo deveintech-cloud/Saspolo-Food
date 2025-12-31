@@ -3,7 +3,7 @@ import React from 'react';
 import { useSite } from '../SiteContext.tsx';
 
 const Stats: React.FC = () => {
-  const { config } = useSite();
+  const { config, t } = useSite();
 
   return (
     <section className="border-y border-white/5 bg-zinc-900/30">
@@ -14,7 +14,7 @@ const Stats: React.FC = () => {
               {stat.value}
             </span>
             <span className="text-[8px] sm:text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-bold">
-              {stat.label}
+              {t(stat.label)}
             </span>
           </div>
         ))}
