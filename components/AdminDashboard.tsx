@@ -1,11 +1,11 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Layout, Settings, FileText, ImageIcon, Search, ChevronRight, Save, Trash2, Plus, 
   Eye, EyeOff, ArrowUp, ArrowDown, Undo2, Menu as MenuIcon, Palette, Newspaper, 
   Link as LinkIcon, X, PlusCircle, Upload, Info, BarChart3, Share2, Type, Square,
   CircleDot, Layers, Quote as QuoteIcon, Activity, CheckCircle2, AlertTriangle, RefreshCcw,
-  Flame, Leaf, Wheat
+  Flame, Leaf, Wheat, Copy, ChevronDown, Sparkles
 } from 'lucide-react';
 import { useSite } from '../SiteContext.tsx';
 import { MenuCategory, MenuItem, Post, NavItem, SiteConfig } from '../types.ts';
@@ -23,8 +23,20 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState<'content' | 'about' | 'stats' | 'menu' | 'posts' | 'navigation' | 'design' | 'footer' | 'seo'>('content');
   const [editingMenuItemId, setEditingMenuItemId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showAddMenu, setShowAddMenu] = useState(false);
   
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const addMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (addMenuRef.current && !addMenuRef.current.contains(event.target as Node)) {
+        setShowAddMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const navItems = [
     { id: 'content', label: 'Home Page', icon: <FileText size={16} /> },
@@ -52,12 +64,27 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   };
 
-  const moveAboutSection = (idx: number, direction: 'up' | 'down') => {
-    const newSections = [...config.about.sections];
-    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
-    if (targetIdx < 0 || targetIdx >= newSections.length) return;
-    [newSections[idx], newSections[targetIdx]] = [newSections[targetIdx], newSections[idx]];
-    updateConfig({ about: { ...config.about, sections: newSections } });
+  const addNewProduct = (category: MenuCategory) => {
+    const newItemId = Date.now().toString();
+    const newItem: MenuItem = {
+      id: newItemId,
+      name: `New ${category} Creation`,
+      description: 'Describe the flavors and soul of this dish...',
+      category: category,
+      image: 'https://images.unsplash.com/photo-1544025162-d76694265947',
+      tags: [],
+      nutrition: { calories: '0 kcal', protein: '0g', fat: '0g', carbs: '0g' }
+    };
+    updateMenuItems([...menuItems, newItem]);
+    setEditingMenuItemId(newItemId);
+    setShowAddMenu(false);
+  };
+
+  const duplicateProduct = (item: MenuItem) => {
+    const newItemId = Date.now().toString();
+    const duplicatedItem = { ...item, id: newItemId, name: `${item.name} (Copy)` };
+    updateMenuItems([...menuItems, duplicatedItem]);
+    setEditingMenuItemId(newItemId);
   };
 
   return (
@@ -78,7 +105,7 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       }`}>
         <div className="p-8 border-b border-white/5 hidden md:block">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-[9px] font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">System Core v2.4</span>
+            <span className="text-[9px] font-black tracking-[0.2em] uppercase font-jakarta text-orange-500">System Core v2.5</span>
             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-xl transition-all text-zinc-500 hover:text-white active:scale-90">
               <Undo2 size={16} />
             </button>
@@ -88,11 +115,6 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           </h1>
         </div>
         
-        <div className="md:hidden p-8 flex justify-between items-center border-b border-white/5">
-           <h1 className="text-xl font-bold text-white font-jakarta">Dashboard</h1>
-           <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-zinc-500 hover:text-white"><X size={20} /></button>
-        </div>
-
         <nav className="p-4 space-y-1">
           {navItems.map(tab => (
             <button
@@ -156,14 +178,42 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <div className="space-y-12">
                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                  <SectionHeader title="Product Catalog" subtitle="Dishes & Curated Selection" />
-                 <button 
-                  onClick={() => updateMenuItems([...menuItems, { id: Date.now().toString(), name: 'New Seasonal Dish', description: '', category: MenuCategory.MAIN, image: 'https://images.unsplash.com/photo-1544025162-d76694265947', tags: [] }])} 
-                  className="flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-orange-950/20 hover:translate-y-[-1px] hover:bg-orange-500 transition-all active:scale-95 group"
-                 >
-                   <Plus size={14} className="group-hover:rotate-90 transition-transform duration-300" />
-                   Add New Product
-                 </button>
+                 
+                 {/* Improved Add Button with Options */}
+                 <div className="relative" ref={addMenuRef}>
+                    <button 
+                      onClick={() => setShowAddMenu(!showAddMenu)}
+                      className="flex items-center gap-3 px-6 py-3 bg-orange-600 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-orange-950/20 hover:translate-y-[-1px] hover:bg-orange-500 transition-all active:scale-95 group"
+                    >
+                      <Plus size={14} className={`transition-transform duration-300 ${showAddMenu ? 'rotate-45' : ''}`} />
+                      Add New Product
+                      <ChevronDown size={14} className={`ml-2 transition-transform ${showAddMenu ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {showAddMenu && (
+                      <div className="absolute right-0 top-full mt-3 w-56 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl z-[60] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="p-3 border-b border-white/5 bg-zinc-950/50">
+                          <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500">Choose Category</span>
+                        </div>
+                        <button onClick={() => addNewProduct(MenuCategory.BREAKFAST)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <PlusCircle size={14} className="text-orange-500" /> Breakfast Option
+                        </button>
+                        <button onClick={() => addNewProduct(MenuCategory.MAIN)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <PlusCircle size={14} className="text-orange-500" /> Main Entree
+                        </button>
+                        <button onClick={() => addNewProduct(MenuCategory.DESSERTS)} className="w-full flex items-center gap-3 px-4 py-3.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-white/5 transition-all text-left">
+                          <PlusCircle size={14} className="text-orange-500" /> Sweet Finale
+                        </button>
+                        <div className="p-3 bg-zinc-950/30 border-t border-white/5">
+                           <button className="flex items-center gap-2 text-[8px] font-black text-orange-500/60 uppercase italic tracking-widest">
+                             <Sparkles size={10} /> AI Generation Coming Soon
+                           </button>
+                        </div>
+                      </div>
+                    )}
+                 </div>
                </div>
+
                <div className="grid gap-8">
                  {menuItems.map(item => (
                    <div key={item.id} className={`p-6 md:p-8 bg-zinc-900 border transition-all duration-300 rounded-[1.5rem] md:rounded-[2.5rem] flex flex-col gap-8 group shadow-lg ${editingMenuItemId === item.id ? 'border-orange-500/50 ring-1 ring-orange-500/20' : 'border-white/5'}`}>
@@ -199,6 +249,13 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                             </div>
                             <div className="flex gap-2 shrink-0 pt-6">
                                <button 
+                                onClick={() => duplicateProduct(item)} 
+                                className="p-2.5 bg-zinc-800 text-zinc-400 hover:text-white rounded-xl transition-all active:scale-90"
+                                title="Duplicate"
+                               >
+                                 <Copy size={18}/>
+                               </button>
+                               <button 
                                 onClick={() => setEditingMenuItemId(editingMenuItemId === item.id ? null : item.id)} 
                                 className={`p-2.5 rounded-xl transition-all active:scale-90 ${editingMenuItemId === item.id ? 'bg-orange-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
                                 title="Edit Nutrition & Flags"
@@ -208,6 +265,7 @@ const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                <button 
                                 onClick={() => updateMenuItems(menuItems.filter(i => i.id !== item.id))} 
                                 className="p-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-600 hover:text-white rounded-xl transition-all active:scale-90"
+                                title="Delete"
                                >
                                  <Trash2 size={18}/>
                                </button>
